@@ -2,13 +2,14 @@ import { FormHandles } from "@unform/core";
 import { Form } from "@unform/web";
 import { useCallback, useRef } from "react";
 import { FaSignInAlt } from "react-icons/fa";
+import { FiLock, FiMail } from "react-icons/fi";
 import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
 
 import { Button } from "../../../components/Form/Button";
 import { ButtonGroup } from "../../../components/Form/ButtonGroup";
 import { FormGroup } from "../../../components/Form/FormGroup";
-import { Input } from "../../../components/Form/Input";
+import Input from "../../../components/Form/Input";
 import { Logo } from "../../../components/Logo";
 import { useAuth } from "../../../hooks/auth";
 import { useToast } from "../../../hooks/toast";
@@ -70,11 +71,16 @@ export const SignIn: React.FC = () => {
         <Content className="shadow">
           <Form ref={formRef} onSubmit={handleSubmit}>
             <FormGroup>
-              <Input type="text" placeholder="E-mail" name="email" />
-              <Input type="password" placeholder="Senha" name="password" />
+              <Input name="email" icon={FiMail} placeholder="E-mail" />
+              <Input
+                name="password"
+                icon={FiLock}
+                type="password"
+                placeholder="Senha"
+              />
             </FormGroup>
             <ButtonGroup>
-              <Button>
+              <Button className="btn btn-outline-primary btn-lg">
                 <FaSignInAlt />
                 Entrar
               </Button>

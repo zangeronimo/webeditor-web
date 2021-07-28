@@ -12,12 +12,22 @@ export default createGlobalStyle`
     --gray-800: #343a40;
     --gray-900: #212529;
   }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-transition-delay: 9999s;
+    transition-delay: 9999s;
+  }
+
   *{
     box-sizing: border-box;
     outline: 0;
   }
   body {
-    color: #f8f9fa;
+    background: var(--gray-900);
+    color: var(--gray-200);
     -webkit-font-smoothing: antialiased;
   }
   body, input, button {
