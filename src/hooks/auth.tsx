@@ -1,4 +1,6 @@
 import React, { createContext, useCallback, useContext, useState } from "react";
+import jwtDecode from "jwt-decode";
+
 import api from "../services/api";
 
 interface SignInCredentials {
@@ -6,9 +8,7 @@ interface SignInCredentials {
   password: string;
 }
 interface User {
-  id: string;
   name: string;
-  email: string;
 }
 
 interface AuthContextData {
@@ -42,12 +42,19 @@ const AuthProvider: React.FC = ({ children }) => {
     return {} as AuthState;
   });
 
-  const signIn = useCallback(async ({ email, password }) => {
-    const response = await api.post("/Auth", { email, password });
+  const signIn = useCallback(async ({ email: e, password }) => {
+    const response = await api.post("/Session", { email: e, password });
 
-    const { token, user } = response.data;
+    const { token } = response.data;
 
     localStorage.setItem("@WEBEditor:token", token);
+    const decodedToken = jwtDecode(token);
+    const { name } = decodedToken as { name: string };
+
+    const user: User = {
+      name,
+    };
+
     localStorage.setItem("@WEBEditor:user", JSON.stringify(user));
 
     api.defaults.headers.authorization = `Bearer ${token}`;
