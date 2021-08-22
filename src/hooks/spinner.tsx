@@ -1,5 +1,5 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
-import { Spinner } from "../components/Spinner";
+import React, { createContext, useCallback, useContext, useState } from 'react';
+import { Spinner } from '../components/Spinner';
 
 type SpinnerContextData = {
   showSpinner: (start: boolean) => void;
@@ -26,7 +26,7 @@ function useSpinner(): SpinnerContextData {
   const context = useContext(SpinnerContext);
 
   if (!context) {
-    throw new Error("useSpinner must be used within a SpinnerProvider");
+    throw new Error('useSpinner must be used within a SpinnerProvider');
   }
 
   return context;

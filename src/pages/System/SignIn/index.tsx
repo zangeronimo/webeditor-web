@@ -1,21 +1,21 @@
-import { FormHandles } from "@unform/core";
-import { Form } from "@unform/web";
-import { useCallback, useRef } from "react";
-import { FaSignInAlt } from "react-icons/fa";
-import { FiLock, FiMail } from "react-icons/fi";
-import { useHistory } from "react-router-dom";
-import * as Yup from "yup";
+import { FormHandles } from '@unform/core';
+import { Form } from '@unform/web';
+import { useCallback, useRef } from 'react';
+import { FaSignInAlt } from 'react-icons/fa';
+import { FiLock, FiMail } from 'react-icons/fi';
+import { useHistory } from 'react-router-dom';
+import * as Yup from 'yup';
 
-import { Button } from "../../../components/Form/Button";
-import { ButtonGroup } from "../../../components/Form/ButtonGroup";
-import { FormGroup } from "../../../components/Form/FormGroup";
-import Input from "../../../components/Form/Input";
-import { Logo } from "../../../components/Logo";
-import { useAuth } from "../../../hooks/auth";
-import { useToast } from "../../../hooks/toast";
-import getValidationErrors from "../../../utils/getValidationErrors";
+import { Button } from '../../../components/Form/Button';
+import { ButtonGroup } from '../../../components/Form/ButtonGroup';
+import { FormGroup } from '../../../components/Form/FormGroup';
+import Input from '../../../components/Form/Input';
+import { Logo } from './Logo';
+import { useAuth } from '../../../hooks/auth';
+import { useToast } from '../../../hooks/toast';
+import getValidationErrors from '../../../utils/getValidationErrors';
 
-import { Container, LoginBox, Content } from "./styles";
+import { Container, LoginBox, Content } from './styles';
 
 type SignInData = {
   email: string;
@@ -35,9 +35,9 @@ export const SignIn: React.FC = () => {
 
         const schema = Yup.object().shape({
           email: Yup.string()
-            .required("E-mail obrigatório")
-            .email("Digite um e-mail válido"),
-          password: Yup.string().required("Senha obrigatória"),
+            .required('E-mail obrigatório')
+            .email('Digite um e-mail válido'),
+          password: Yup.string().required('Senha obrigatória'),
         });
 
         await schema.validate(data, {
@@ -45,7 +45,7 @@ export const SignIn: React.FC = () => {
         });
         await signIn({ email: data.email, password: data.password });
 
-        history.push("/dashboard");
+        history.push('/dashboard');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -55,13 +55,13 @@ export const SignIn: React.FC = () => {
         }
 
         addToast({
-          type: "error",
-          title: "Erro na autenticação",
-          description: "Ocorreu um erro ao fazer login, cheque as credenciais",
+          type: 'error',
+          title: 'Erro na autenticação',
+          description: 'Ocorreu um erro ao fazer login, cheque as credenciais',
         });
       }
     },
-    [addToast, history, signIn]
+    [addToast, history, signIn],
   );
 
   return (

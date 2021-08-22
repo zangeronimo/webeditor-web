@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import { AuthProvider } from "./auth";
-import { ToastProvider } from "./toast";
-import { SpinnerProvider } from "./spinner";
-import { InterceptorProvider } from "./interceptor";
+import { AuthProvider } from './auth';
+import { ToastProvider } from './toast';
+import { SpinnerProvider } from './spinner';
+import { InterceptorProvider } from './interceptor';
 
 const Hooks: React.FC = ({ children }) => (
   <AuthProvider>

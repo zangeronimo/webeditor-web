@@ -1,16 +1,26 @@
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from 'react-router-dom';
 
-import GlobalStyle from "./styles/global";
-import Hooks from "./hooks";
-import Routes from "./routes";
+import Routes from './routes';
+import { Navbar } from './components/Layout/Navbar';
+import { useAuth } from './hooks/auth';
+import { Sidebar } from './components/Layout/Sidebar';
 
 const App: React.FC = () => {
+  const { user } = useAuth();
+
+  if (!user) {
+    return (
+      <BrowserRouter>
+        <Routes />
+      </BrowserRouter>
+    );
+  }
+
   return (
     <BrowserRouter>
-      <Hooks>
-        <Routes />
-        <GlobalStyle />
-      </Hooks>
+      <Navbar />
+      <Sidebar />
+      <Routes />
     </BrowserRouter>
   );
 };

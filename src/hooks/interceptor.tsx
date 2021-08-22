@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect } from "react";
-import api from "../services/api";
-import { useSpinner } from "./spinner";
+import React, { createContext, useContext, useEffect } from 'react';
+import api from '../services/api';
+import { useSpinner } from './spinner';
 
 const InterceptorContext = createContext({});
 
@@ -9,24 +9,24 @@ const InterceptorProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     api.interceptors.request.use(
-      (config) => {
+      config => {
         showSpinner(true);
         return config;
       },
-      (error) => {
+      error => {
         return Promise.reject(error);
-      }
+      },
     );
 
     api.interceptors.response.use(
-      (response) => {
+      response => {
         showSpinner(false);
         return response;
       },
-      (error) => {
+      error => {
         showSpinner(false);
         return Promise.reject(error);
-      }
+      },
     );
   }, [showSpinner]);
 
@@ -42,7 +42,7 @@ function useInterceptor() {
   const context = useContext(InterceptorContext);
 
   if (!context) {
-    throw new Error("useInterceptor must be used within a InterceptorProvider");
+    throw new Error('useInterceptor must be used within a InterceptorProvider');
   }
 
   return context;

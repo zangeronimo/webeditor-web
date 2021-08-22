@@ -1,9 +1,9 @@
-import React from "react";
-import { Switch } from "react-router-dom";
-import { Dashboard } from "../pages/System/Dashboard";
-import { SignIn } from "../pages/System/SignIn";
+import React from 'react';
+import { Switch } from 'react-router-dom';
+import { Dashboard } from '../pages/System/Dashboard';
+import { SignIn } from '../pages/System/SignIn';
 
-import Route from "./Route";
+import Route from './Route';
 
 const Routes: React.FC = () => (
   <Switch>

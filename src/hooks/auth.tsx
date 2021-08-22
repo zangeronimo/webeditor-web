@@ -1,7 +1,7 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
-import jwtDecode from "jwt-decode";
+import React, { createContext, useCallback, useContext, useState } from 'react';
+import jwtDecode from 'jwt-decode';
 
-import api from "../services/api";
+import api from '../services/api';
 
 interface SignInCredentials {
   email: string;
@@ -27,8 +27,8 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>(() => {
-    const token = localStorage.getItem("@WEBEditor:token");
-    const user = localStorage.getItem("@WEBEditor:user");
+    const token = localStorage.getItem('@WEBEditor:token');
+    const user = localStorage.getItem('@WEBEditor:user');
 
     if (token && user) {
       api.defaults.headers.authorization = `Bearer ${token}`;
@@ -43,11 +43,11 @@ const AuthProvider: React.FC = ({ children }) => {
   });
 
   const signIn = useCallback(async ({ email: e, password }) => {
-    const response = await api.post("/Session", { email: e, password });
+    const response = await api.post('/Session', { email: e, password });
 
     const { token } = response.data;
 
-    localStorage.setItem("@WEBEditor:token", token);
+    localStorage.setItem('@WEBEditor:token', token);
     const decodedToken = jwtDecode(token);
     const { name } = decodedToken as { name: string };
 
@@ -55,7 +55,7 @@ const AuthProvider: React.FC = ({ children }) => {
       name,
     };
 
-    localStorage.setItem("@WEBEditor:user", JSON.stringify(user));
+    localStorage.setItem('@WEBEditor:user', JSON.stringify(user));
 
     api.defaults.headers.authorization = `Bearer ${token}`;
 
@@ -63,8 +63,8 @@ const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signOut = useCallback(() => {
-    localStorage.removeItem("@WEBEditor:token");
-    localStorage.removeItem("@WEBEditor:user");
+    localStorage.removeItem('@WEBEditor:token');
+    localStorage.removeItem('@WEBEditor:user');
 
     setData({} as AuthState);
   }, []);
@@ -75,9 +75,9 @@ const AuthProvider: React.FC = ({ children }) => {
         token: data.token,
         user,
       });
-      localStorage.setItem("@WEBEditor:user", JSON.stringify(user));
+      localStorage.setItem('@WEBEditor:user', JSON.stringify(user));
     },
-    [data.token]
+    [data.token],
   );
 
   return (
@@ -93,7 +93,7 @@ function useAuth(): AuthContextData {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
 
   return context;

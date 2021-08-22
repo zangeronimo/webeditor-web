@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-import backgroundImage from "../../../assets/background-login.png";
+import backgroundImage from '../../../assets/background-login.png';
 
 export const Container = styled.div`
   display: flex;
