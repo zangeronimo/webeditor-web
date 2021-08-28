@@ -1,8 +1,11 @@
 import { FaBars } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { Container, Logo } from './styles';
+import { useAuth } from '../../../hooks/auth';
+import { Container, Logo, UserConfig } from './styles';
 
 export const Navbar: React.FC = () => {
+  const { signOut } = useAuth();
+
   return (
     <Container className="navbar navbar-dark bg-dark">
       <div className="container-fluid">
@@ -20,6 +23,11 @@ export const Navbar: React.FC = () => {
             <FaBars />
           </button>
         </Logo>
+        <UserConfig>
+          <button type="button" onClick={signOut}>
+            Sair
+          </button>
+        </UserConfig>
       </div>
     </Container>
   );

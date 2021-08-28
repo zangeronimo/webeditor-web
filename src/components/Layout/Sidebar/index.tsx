@@ -34,16 +34,24 @@ export const Sidebar: React.FC = () => {
         <div className="collapse" id="collapseExample">
           <ul>
             <li>
-              <Link to="/webeditor/usuarios">Usuários</Link>
+              <Link to="/webeditor/usuarios" data-bs-toggle="offcanvas">
+                Usuários
+              </Link>
             </li>
             <li>
-              <Link to="/webeditor/empresas">Empresas</Link>
+              <Link to="/webeditor/empresas" data-bs-toggle="offcanvas">
+                Empresas
+              </Link>
             </li>
             <li>
-              <Link to="/webeditor/modulos">Módulos</Link>
+              <Link to="/webeditor/modulos" data-bs-toggle="offcanvas">
+                Módulos
+              </Link>
             </li>
             <li>
-              <Link to="/webeditor/regras">Regras</Link>
+              <Link to="/webeditor/regras" data-bs-toggle="offcanvas">
+                Regras
+              </Link>
             </li>
           </ul>
         </div>

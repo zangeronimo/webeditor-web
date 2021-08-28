@@ -4,12 +4,15 @@ import { AuthProvider } from './auth';
 import { ToastProvider } from './toast';
 import { SpinnerProvider } from './spinner';
 import { InterceptorProvider } from './interceptor';
+import { TitleProvider } from './title';
 
 const Hooks: React.FC = ({ children }) => (
   <AuthProvider>
     <ToastProvider>
       <SpinnerProvider>
-        <InterceptorProvider>{children}</InterceptorProvider>
+        <InterceptorProvider>
+          <TitleProvider>{children}</TitleProvider>
+        </InterceptorProvider>
       </SpinnerProvider>
     </ToastProvider>
   </AuthProvider>

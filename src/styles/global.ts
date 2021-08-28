@@ -25,19 +25,35 @@ export default createGlobalStyle`
     box-sizing: border-box;
     outline: 0;
   }
+
+  html {
+    width: 100vw;
+    height: 100vh;
+  }
+
   body {
     background: var(--gray-900);
     color: var(--gray-200);
     -webkit-font-smoothing: antialiased;
   }
+
   body, input, button {
     font-family: 'Roboto Slab', serif;
     font-size: 16px;
   }
+
   h1, h2, h3, h4, h5, h6, strong {
     font-weight: 500;
   }
+
   button {
     cursor: pointer;
+  }
+
+  .page-content {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 `;

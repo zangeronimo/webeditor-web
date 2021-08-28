@@ -1,13 +1,15 @@
-import { useAuth } from '../../../hooks/auth';
+import { useEffect } from 'react';
+import { useTitle } from '../../../hooks/title';
 
 export const Dashboard: React.FC = () => {
-  const { signOut } = useAuth();
+  const { setTitle } = useTitle();
+
+  useEffect(() => setTitle('Dashboard'), [setTitle]);
+
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <button type="button" onClick={signOut}>
-        Sair
-      </button>
-    </div>
+    <>
+      <p>Bem-vindo</p>
+      <p>Área para informações úteis, gráficos, informativos, etc...</p>
+    </>
   );
 };
