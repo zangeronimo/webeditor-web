@@ -1,10 +1,10 @@
 import { FaBars } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { Logo } from './styles';
+import { Container, Logo } from './styles';
 
 export const Navbar: React.FC = () => {
   return (
-    <nav className="navbar navbar-dark bg-dark">
+    <Container className="navbar navbar-dark bg-dark">
       <div className="container-fluid">
         <Logo>
           <Link className="navbar-brand" to="/dashboard">
@@ -21,6 +21,6 @@ export const Navbar: React.FC = () => {
           </button>
         </Logo>
       </div>
-    </nav>
+    </Container>
   );
 };

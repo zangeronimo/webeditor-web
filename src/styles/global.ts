@@ -39,9 +39,5 @@ export default createGlobalStyle`
   }
   button {
     cursor: pointer;
-
-    &:active {
-      box-shadow: none !important;
-    }
   }
 `;

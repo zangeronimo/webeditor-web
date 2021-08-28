@@ -1,14 +1,17 @@
+import { Link } from 'react-router-dom';
+import { Container, Header } from './styles';
+
 export const Sidebar: React.FC = () => {
   return (
-    <div
+    <Container
       className="offcanvas offcanvas-start"
       tabIndex={-1}
       id="offcanvasWEBEditor"
       aria-labelledby="offcanvasWEBEditorLabel"
     >
-      <div className="offcanvas-header">
+      <Header className="offcanvas-header">
         <h5 className="offcanvas-title" id="offcanvasWEBEditorLabel">
-          Offcanvas
+          Menu Principal
         </h5>
         <button
           type="button"
@@ -16,40 +19,35 @@ export const Sidebar: React.FC = () => {
           data-bs-dismiss="offcanvas"
           aria-label="Close"
         />
-      </div>
+      </Header>
       <div className="offcanvas-body">
-        <div>
-          Some text as placeholder. In real life you can have the elements you
-          have chosen. Like, text, images, lists, etc.
-        </div>
-        <div className="dropdown mt-3">
-          <button
-            className="btn btn-secondary dropdown-toggle"
-            type="button"
-            id="dropdownMenuButton"
-            data-bs-toggle="dropdown"
-          >
-            Dropdown button
-          </button>
-          <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <button
+          className="btn btn-primary"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseExample"
+          aria-expanded="false"
+          aria-controls="collapseExample"
+        >
+          WEBEditor
+        </button>
+        <div className="collapse" id="collapseExample">
+          <ul>
             <li>
-              <a className="dropdown-item" href="/#">
-                Action
-              </a>
+              <Link to="/webeditor/usuarios">Usuários</Link>
             </li>
             <li>
-              <a className="dropdown-item" href="/#">
-                Another action
-              </a>
+              <Link to="/webeditor/empresas">Empresas</Link>
             </li>
             <li>
-              <a className="dropdown-item" href="/#">
-                Something else here
-              </a>
+              <Link to="/webeditor/modulos">Módulos</Link>
+            </li>
+            <li>
+              <Link to="/webeditor/regras">Regras</Link>
             </li>
           </ul>
         </div>
       </div>
-    </div>
+    </Container>
   );
 };
