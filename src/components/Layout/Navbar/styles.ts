@@ -6,7 +6,7 @@ export const Container = styled.nav`
   height: 70px;
   margin-bottom: 3.8rem;
   padding: 0 1rem;
-  border: 1px solid;
+  background: var(--gray-800);
 `;
 
 export const Logo = styled.div`

@@ -6,6 +6,7 @@ export const Container = styled.footer`
   justify-content: space-between;
 
   margin-top: auto;
-  border: 1px solid;
   padding: 0.5rem 2rem;
+
+  background: var(--gray-800);
 `;

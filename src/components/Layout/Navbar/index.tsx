@@ -7,7 +7,7 @@ export const Navbar: React.FC = () => {
   const { signOut } = useAuth();
 
   return (
-    <Container className="navbar navbar-dark bg-dark">
+    <Container className="navbar">
       <div className="container-fluid">
         <Logo>
           <Link className="navbar-brand" to="/dashboard">
