@@ -1,8 +1,8 @@
 import React from 'react';
 import { Switch } from 'react-router-dom';
-import { Dashboard } from '../pages/System/Dashboard';
-import { SignIn } from '../pages/System/SignIn';
-import { Users } from '../pages/System/Users';
+import { Dashboard } from '../pages/system/Dashboard';
+import { SignIn } from '../pages/system/SignIn';
+import { Users } from '../pages/system/Users';
 
 import Route from './Route';
 
