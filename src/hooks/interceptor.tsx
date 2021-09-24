@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useEffect } from 'react';
 import api from '../services/api';
+import { useAuth } from './auth';
 import { useSpinner } from './spinner';
 
 const InterceptorContext = createContext({});
 
 const InterceptorProvider: React.FC = ({ children }) => {
   const { showSpinner } = useSpinner();
+  const { signOut } = useAuth();
 
   useEffect(() => {
     api.interceptors.request.use(
@@ -25,10 +27,11 @@ const InterceptorProvider: React.FC = ({ children }) => {
       },
       error => {
         showSpinner(false);
+        signOut();
         return Promise.reject(error);
       },
     );
-  }, [showSpinner]);
+  }, [showSpinner, signOut]);
 
   return (
     <InterceptorContext.Provider value={{}}>

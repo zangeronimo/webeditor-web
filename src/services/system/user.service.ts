@@ -18,6 +18,4 @@ export type User = {
   ];
 };
 
-export const getUser = (): Promise<AxiosResponse<User[]>> => {
-  return api.get('/users');
-};
+export const getUser = (): Promise<AxiosResponse<User[]>> => api.get('/users');
