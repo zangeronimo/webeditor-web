@@ -32,7 +32,7 @@ export default createGlobalStyle`
   }
 
   body {
-    background: var(--gray-900);
+    background: var(--gray-200);
     color: var(--gray-200);
     -webkit-font-smoothing: antialiased;
   }

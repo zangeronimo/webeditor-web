@@ -67,11 +67,16 @@ export const SignIn: React.FC = () => {
   return (
     <Container>
       <LoginBox>
-        <Logo />
-        <Content className="shadow">
+        <Content>
+          <Logo />
           <Form ref={formRef} onSubmit={handleSubmit}>
             <FormGroup>
-              <Input name="email" icon={FiMail} placeholder="E-mail" />
+              <Input
+                name="email"
+                icon={FiMail}
+                placeholder="E-mail"
+                autoFocus
+              />
               <Input
                 name="password"
                 icon={FiLock}
@@ -80,7 +85,7 @@ export const SignIn: React.FC = () => {
               />
             </FormGroup>
             <ButtonGroup>
-              <Button className="btn btn-outline-primary btn-lg">
+              <Button className="form-control btn btn-primary">
                 <FaSignInAlt />
                 Entrar
               </Button>

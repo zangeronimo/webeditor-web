@@ -8,11 +8,11 @@ interface ContainerProps {
 }
 
 export const Container = styled.div<ContainerProps>`
-  background: var(--gray-600);
+  background: var(--gray-300);
+  border: 2px solid var(--gray-400);
   border-radius: 10px;
-  border: 2px solid var(--gray-600);
-  color: var(--gray-300);
-  padding: 16px;
+  color: var(--gray-700);
+  padding: 0.8rem 1rem;
   width: 100%;
   display: flex;
   align-items: center;
@@ -39,9 +39,9 @@ export const Container = styled.div<ContainerProps>`
     flex: 1;
     background: transparent;
     border: 0;
-    color: var(--gray-300);
+    color: var(--gray-700);
     &::placeholder {
-      color: var(--gray-500);
+      color: var(--gray-600);
     }
   }
   > svg {

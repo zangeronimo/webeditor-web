@@ -6,4 +6,8 @@ export const Container = styled.div`
   top: 0;
   margin: 30px;
   overflow: hidden;
+
+  @media only screen and (max-width: 600px) {
+    margin: 1rem 0;
+  }
 `;

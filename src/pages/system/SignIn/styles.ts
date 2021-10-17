@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import backgroundImage from '../../../assets/background-login.png';
+import backgroundImage from '../../../assets/background_login.webp';
 
 export const Container = styled.div`
   display: flex;
@@ -17,10 +17,17 @@ export const LoginBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media only screen and (max-width: 600px) {
+    margin: 0 1rem;
+  }
+  @media only screen and (max-width: 800px) {
+    max-width: 400px;
+  }
 `;
 
 export const Content = styled.div`
-  background-color: var(--gray-900);
+  background-color: var(--gray-400);
   padding: 1rem;
   border-radius: 5px;
 `;
