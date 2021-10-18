@@ -13,12 +13,14 @@ import { Container, Error } from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
+  label: string;
   containerStyle?: Record<string, unknown>;
   icon?: React.ComponentType<IconBaseProps>;
 }
 
 const Input: React.FC<InputProps> = ({
   name,
+  label,
   containerStyle = {},
   icon: Icon,
   ...rest
@@ -54,15 +56,18 @@ const Input: React.FC<InputProps> = ({
       isFilled={isFilled}
       data-testid="input-container"
     >
-      {Icon && <Icon size={20} />}
-      <input
-        onFocus={handleInputFocus}
-        onBlur={handleInputBlur}
-        defaultValue={defaultValue}
-        autoComplete="false"
-        ref={inputRef}
-        {...rest}
-      />
+      {Icon && <Icon />}
+      <div className="input">
+        <label htmlFor={name}>{label}</label>
+        <input
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+          defaultValue={defaultValue}
+          autoComplete="false"
+          ref={inputRef}
+          {...rest}
+        />
+      </div>
 
       {error && (
         <Error title={error}>

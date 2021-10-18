@@ -30,4 +30,10 @@ export const Content = styled.div`
   background-color: var(--gray-400);
   padding: 1rem;
   border-radius: 5px;
+
+  button {
+    @media only screen and (max-width: 600px) {
+      flex: 1;
+    }
+  }
 `;

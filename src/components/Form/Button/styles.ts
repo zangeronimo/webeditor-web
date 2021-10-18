@@ -5,8 +5,8 @@ export const Container = styled.button`
   align-items: center;
   justify-content: center;
   margin: 0;
-  padding: 0;
-  height: 2.5rem;
+  padding: 0 1rem;
+  height: 3rem;
 
   border-radius: 8px;
   font-size: 1.2rem;

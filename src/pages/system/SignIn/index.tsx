@@ -71,21 +71,16 @@ export const SignIn: React.FC = () => {
           <Logo />
           <Form ref={formRef} onSubmit={handleSubmit}>
             <FormGroup>
-              <Input
-                name="email"
-                icon={FiMail}
-                placeholder="E-mail"
-                autoFocus
-              />
+              <Input name="email" icon={FiMail} label="E-mail" autoFocus />
               <Input
                 name="password"
                 icon={FiLock}
                 type="password"
-                placeholder="Senha"
+                label="Senha"
               />
             </FormGroup>
             <ButtonGroup>
-              <Button className="form-control btn btn-primary">
+              <Button className="btn btn-primary">
                 <FaSignInAlt />
                 Entrar
               </Button>

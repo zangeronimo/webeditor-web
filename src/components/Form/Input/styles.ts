@@ -8,17 +8,17 @@ interface ContainerProps {
 }
 
 export const Container = styled.div<ContainerProps>`
+  position: relative;
   background: var(--gray-300);
   border: 2px solid var(--gray-400);
   border-radius: 10px;
   color: var(--gray-700);
-  padding: 0.8rem 1rem;
+  padding: 0 0.5rem;
   width: 100%;
+  height: 3.5rem;
   display: flex;
   align-items: center;
-  & + div {
-    margin-top: 8px;
-  }
+
   ${props =>
     props.isErrored &&
     css`
@@ -35,24 +35,41 @@ export const Container = styled.div<ContainerProps>`
     css`
       color: #ff9000;
     `}
+
+  label {
+    font-size: 0.75rem;
+  }
+
+  div.input {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
   input {
     flex: 1;
     background: transparent;
     border: 0;
+    font-size: 1rem;
     color: var(--gray-700);
     &::placeholder {
       color: var(--gray-600);
     }
   }
   > svg {
-    margin-right: 16px;
+    margin-right: 0.5rem;
+    font-size: 1.75rem;
   }
 `;
 
 export const Error = styled(Tooltip)`
-  height: 20px;
-  margin-left: 16px;
+  position: absolute;
+  top: 0.8rem;
+  right: 1rem;
+  height: 1.25rem;
+  margin-left: 1rem;
   svg {
+    width: 20px;
     margin: 0;
   }
   span {
