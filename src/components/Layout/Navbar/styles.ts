@@ -4,17 +4,25 @@ export const Container = styled.nav`
   display: flex;
   align-items: center;
   height: 70px;
-  margin-bottom: 3.8rem;
   padding: 0 1rem;
-  background: var(--gray-800);
+
+  @media only screen and (max-width: 600px) {
+    height: 60px;
+    padding: 0;
+  }
 `;
 
 export const Logo = styled.div`
   display: flex;
   align-items: center;
+  text-align: center;
+  color: #33436a;
+  span {
+    color: #002243;
+  }
 
   a {
-    font-size: 1.6rem;
+    font-size: 2rem;
   }
 `;
 

@@ -71,7 +71,7 @@ export const SignIn: React.FC = () => {
           <Logo />
           <Form ref={formRef} onSubmit={handleSubmit}>
             <FormGroup>
-              <Input name="email" icon={FiMail} label="E-mail" autoFocus />
+              <Input name="email" icon={FiMail} label="E-mail" />
               <Input
                 name="password"
                 icon={FiLock}

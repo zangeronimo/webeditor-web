@@ -1,30 +1,24 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
-type ContainerProps = {
-  title: string;
-};
-
-export const Container = styled.div<ContainerProps>`
+export const Container = styled.div`
   position: relative;
-  margin: 2rem;
-  padding: 1rem 2rem;
-  border-radius: 0 8px 8px 8px;
-  background: var(--gray-800);
+  padding: 1rem;
+  margin: 0 1rem;
+  border-radius: 8px;
+  background: var(--gray-200);
 
-  ${props =>
-    props.title &&
-    css`
-      &::before {
-        content: '${props.title}';
-        position: absolute;
-        top: -2.4rem;
-        left: 0;
-        border-radius: 10px 10px 0 0;
-        border-bottom: 1px solid var(--gray-800);
-        background: var(--gray-800);
-        padding: 0 2rem;
-        z-index: 2;
-        font-size: 1.6rem;
-      }
-    `}
+  @media only screen and (max-width: 600px) {
+    border-radius: 0;
+    margin: 0;
+    padding: 0.5rem;
+  }
+`;
+
+export const Title = styled.h1`
+  margin: 1rem 1rem 0 1rem;
+  padding: 0;
+
+  @media only screen and (max-width: 600px) {
+    margin: 0.5rem;
+  }
 `;

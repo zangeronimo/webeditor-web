@@ -26,20 +26,30 @@ export default createGlobalStyle`
     outline: 0;
   }
 
+  a {
+    color: var(---gray-700);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  a:hover {
+    filter: brightness(20%);
+  }
+
   html {
     width: 100vw;
     height: 100vh;
   }
 
   body {
-    background: var(--gray-200);
-    color: var(--gray-200);
+    background: #fff;
+    color: var(--gray-800);
     -webkit-font-smoothing: antialiased;
   }
 
   body, input, button {
     font-family: 'Roboto Slab', serif;
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   h1, h2, h3, h4, h5, h6, strong {

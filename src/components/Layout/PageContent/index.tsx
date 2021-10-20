@@ -1,12 +1,13 @@
-import { Container } from './styles';
+import { useTitle } from '../../../hooks/title';
+import { Container, Title } from './styles';
 
-type PageContentProps = {
-  title?: string;
-};
+export const PageContent: React.FC = ({ children }) => {
+  const { title } = useTitle();
 
-export const PageContent: React.FC<PageContentProps> = ({
-  title = '',
-  children,
-}) => {
-  return <Container title={title}>{children}</Container>;
+  return (
+    <>
+      <Title>{title}</Title>
+      <Container>{children}</Container>
+    </>
+  );
 };

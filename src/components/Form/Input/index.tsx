@@ -56,7 +56,7 @@ const Input: React.FC<InputProps> = ({
       isFilled={isFilled}
       data-testid="input-container"
     >
-      {Icon && <Icon />}
+      {Icon && <Icon size={20} />}
       <div className="input">
         <label htmlFor={name}>{label}</label>
         <input
@@ -64,6 +64,7 @@ const Input: React.FC<InputProps> = ({
           onBlur={handleInputBlur}
           defaultValue={defaultValue}
           autoComplete="false"
+          id={name}
           ref={inputRef}
           {...rest}
         />

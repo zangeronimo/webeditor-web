@@ -50,15 +50,10 @@ export const Container = styled.div<ContainerProps>`
     flex: 1;
     background: transparent;
     border: 0;
-    font-size: 1rem;
     color: var(--gray-700);
-    &::placeholder {
-      color: var(--gray-600);
-    }
   }
   > svg {
     margin-right: 0.5rem;
-    font-size: 1.75rem;
   }
 `;
 
