@@ -28,4 +28,17 @@ export const Logo = styled.div`
 
 export const UserConfig = styled.div`
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  @media only screen and (max-width: 600px) {
+    gap: 0.5rem;
+
+    button {
+      padding: 2px;
+      background: none !important;
+      border: none !important;
+    }
+  }
 `;

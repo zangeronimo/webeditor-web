@@ -9,6 +9,7 @@ interface SignInCredentials {
 }
 interface User {
   name: string;
+  avatar: string;
 }
 
 interface AuthContextData {
@@ -49,10 +50,11 @@ const AuthProvider: React.FC = ({ children }) => {
 
     localStorage.setItem('@WEBEditor:token', token);
     const decodedToken = jwtDecode(token);
-    const { name } = decodedToken as { name: string };
+    const { name, avatar } = decodedToken as User;
 
     const user: User = {
       name,
+      avatar,
     };
 
     localStorage.setItem('@WEBEditor:user', JSON.stringify(user));

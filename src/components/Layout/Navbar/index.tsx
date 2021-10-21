@@ -2,6 +2,7 @@ import { FaBars, FaSignOutAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../hooks/auth';
 import { Button } from '../../Form/Button';
+import { Profile } from './Profile';
 import { Container, Logo, UserConfig } from './styles';
 
 export const Navbar: React.FC = () => {
@@ -24,6 +25,7 @@ export const Navbar: React.FC = () => {
           <FaBars />
         </Button>
         <UserConfig>
+          <Profile />
           <Button onClick={signOut} title="Sair">
             <FaSignOutAlt />
           </Button>
