@@ -1,21 +1,29 @@
 import { useEffect, useState } from 'react';
 import { FaPencilAlt } from 'react-icons/fa';
+import { useHistory } from 'react-router-dom';
 import { Button } from '../../../components/Form/Button';
+import Input from '../../../components/Form/Input';
 import { useTitle } from '../../../hooks/title';
 import { useToast } from '../../../hooks/toast';
-import { getUser, User } from '../../../services/system/user.service';
+import {
+  FilterUser,
+  getUser,
+  User,
+} from '../../../services/system/user.service';
 import { Container } from './styles';
 
 export const Users: React.FC = () => {
   const { setTitle } = useTitle();
   const [users, setUsers] = useState<User[]>([]);
+  const [filter, setFilter] = useState({} as FilterUser);
 
   const { addToast } = useToast();
+  const history = useHistory();
 
   useEffect(() => setTitle('Usuários'), [setTitle]);
 
   useEffect(() => {
-    getUser()
+    getUser(filter)
       .then(result => setUsers(result.data))
       .catch(() => {
         addToast({
@@ -24,7 +32,7 @@ export const Users: React.FC = () => {
           type: 'error',
         });
       });
-  }, [addToast]);
+  }, [addToast, filter]);
 
   return (
     <Container>
@@ -32,7 +40,7 @@ export const Users: React.FC = () => {
         <h2>Filtros</h2>
       </div>
       <div className="table-responsive">
-        <table className="table table-dark table-striped table-hover table-borderless align-middle">
+        <table className="table table-striped table-hover table-borderless align-middle">
           <thead>
             <tr>
               <th scope="col">Guid</th>
@@ -51,7 +59,12 @@ export const Users: React.FC = () => {
                   <td>{user.email}</td>
                   <td>{user.company.name}</td>
                   <td>
-                    <Button className="btn btn-outline-primary">
+                    <Button
+                      className="btn btn-outline-primary"
+                      onClick={() =>
+                        history.push(`/webeditor/usuarios/form/${user.id}`)
+                      }
+                    >
                       <FaPencilAlt />
                     </Button>
                   </td>

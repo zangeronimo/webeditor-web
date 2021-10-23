@@ -1,3 +1,4 @@
+import { FaChevronCircleLeft } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { Container, Header } from './styles';
 
@@ -13,24 +14,19 @@ export const Sidebar: React.FC = () => {
         <h5 className="offcanvas-title" id="offcanvasWEBEditorLabel">
           Menu Principal
         </h5>
-        <button
-          type="button"
-          className="btn-close text-reset"
-          data-bs-dismiss="offcanvas"
-          aria-label="Close"
-        />
+        <FaChevronCircleLeft data-bs-dismiss="offcanvas" />
       </Header>
       <div className="offcanvas-body">
-        <button
-          className="btn btn-primary"
-          type="button"
+        <Link to="/dashboard">
+          <h2 data-bs-toggle="offcanvas">Dashboard</h2>
+        </Link>
+        <h2
           data-bs-toggle="collapse"
           data-bs-target="#collapseExample"
-          aria-expanded="false"
           aria-controls="collapseExample"
         >
           WEBEditor
-        </button>
+        </h2>
         <div className="collapse" id="collapseExample">
           <ul>
             <li data-bs-toggle="offcanvas">

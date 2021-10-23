@@ -18,4 +18,15 @@ export type User = {
   ];
 };
 
-export const getUser = (): Promise<AxiosResponse<User[]>> => api.get('/users');
+export type FilterUser = {
+  params: {
+    name: string;
+    email: string;
+  };
+};
+
+export const getUser = (filter?: FilterUser): Promise<AxiosResponse<User[]>> =>
+  api.get('/users', filter);
+
+export const getUserById = (id: string): Promise<AxiosResponse<User>> =>
+  api.get(`/users/${id}`);
