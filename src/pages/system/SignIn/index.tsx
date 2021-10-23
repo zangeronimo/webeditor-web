@@ -1,10 +1,11 @@
-import { FormHandles } from '@unform/core';
-import { Form } from '@unform/web';
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import { FaSignInAlt } from 'react-icons/fa';
 import { FiLock, FiMail } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
+
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 import { Button } from '../../../components/Form/Button';
 import { ButtonGroup } from '../../../components/Form/ButtonGroup';
@@ -13,7 +14,6 @@ import Input from '../../../components/Form/Input';
 import { Logo } from './Logo';
 import { useAuth } from '../../../hooks/auth';
 import { useToast } from '../../../hooks/toast';
-import getValidationErrors from '../../../utils/getValidationErrors';
 
 import { Container, LoginBox, Content } from './styles';
 
@@ -22,38 +22,35 @@ type SignInData = {
   password: string;
 };
 
+const schema = Yup.object()
+  .shape({
+    email: Yup.string()
+      .required('E-mail obrigatório')
+      .email('Digite um e-mail válido'),
+    password: Yup.string().required('Senha obrigatória'),
+  })
+  .required();
+
 export const SignIn: React.FC = () => {
-  const formRef = useRef<FormHandles>(null);
   const { signIn } = useAuth();
   const history = useHistory();
   const { addToast } = useToast();
 
-  const handleSubmit = useCallback(
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = useCallback(
     async (data: SignInData) => {
       try {
-        formRef.current?.setErrors({});
-
-        const schema = Yup.object().shape({
-          email: Yup.string()
-            .required('E-mail obrigatório')
-            .email('Digite um e-mail válido'),
-          password: Yup.string().required('Senha obrigatória'),
-        });
-
-        await schema.validate(data, {
-          abortEarly: false,
-        });
         await signIn({ email: data.email, password: data.password });
 
         history.push('/dashboard');
       } catch (err) {
-        if (err instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(err);
-
-          formRef.current?.setErrors(errors);
-          return;
-        }
-
         addToast({
           type: 'error',
           title: 'Erro na autenticação',
@@ -69,23 +66,31 @@ export const SignIn: React.FC = () => {
       <LoginBox>
         <Content>
           <Logo />
-          <Form ref={formRef} onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <FormGroup>
-              <Input name="email" icon={FiMail} label="E-mail" />
               <Input
-                name="password"
+                icon={FiMail}
+                label="E-mail"
+                name="email"
+                error={errors.email?.message}
+                register={register}
+              />
+              <Input
                 icon={FiLock}
                 type="password"
+                name="password"
                 label="Senha"
+                error={errors.password?.message}
+                register={register}
               />
             </FormGroup>
             <ButtonGroup>
-              <Button className="btn btn-primary">
+              <Button type="submit" className="btn btn-primary">
                 <FaSignInAlt />
                 Entrar
               </Button>
             </ButtonGroup>
-          </Form>
+          </form>
         </Content>
       </LoginBox>
     </Container>

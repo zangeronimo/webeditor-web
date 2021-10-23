@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { FaPencilAlt } from 'react-icons/fa';
 import { useHistory } from 'react-router-dom';
 import { Button } from '../../../components/Form/Button';
+import { Filter } from '../../../components/Form/Filter';
 import Input from '../../../components/Form/Input';
 import { useTitle } from '../../../hooks/title';
 import { useToast } from '../../../hooks/toast';
@@ -15,7 +17,9 @@ import { Container } from './styles';
 export const Users: React.FC = () => {
   const { setTitle } = useTitle();
   const [users, setUsers] = useState<User[]>([]);
-  const [filter, setFilter] = useState({} as FilterUser);
+  const [filter, setFilter] = useState({ params: {} } as FilterUser);
+
+  const { register, handleSubmit, reset } = useForm();
 
   const { addToast } = useToast();
   const history = useHistory();
@@ -34,30 +38,40 @@ export const Users: React.FC = () => {
       });
   }, [addToast, filter]);
 
+  const onFilter = useCallback(data => {
+    const newFilter = { params: {} } as FilterUser;
+    if (data.name) newFilter.params.name = data.name;
+    if (data.email) newFilter.params.email = data.email;
+
+    setFilter(newFilter);
+  }, []);
+
+  const clearFilter = useCallback(() => {
+    reset();
+    setFilter({ params: {} } as FilterUser);
+  }, [reset]);
+
   return (
     <Container>
-      <div>
-        <h2>Filtros</h2>
-      </div>
+      <Filter clearFilters={clearFilter} onSubmit={handleSubmit(onFilter)}>
+        <Input label="Nome" name="name" register={register} />
+        <Input label="E-mail" name="email" register={register} />
+      </Filter>
       <div className="table-responsive">
         <table className="table table-striped table-hover table-borderless align-middle">
           <thead>
             <tr>
-              <th scope="col">Guid</th>
-              <th scope="col">Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Company</th>
-              <th scope="col">Tools</th>
+              <th scope="col">Nome</th>
+              <th scope="col">E-mail</th>
+              <th scope="col">Ações</th>
             </tr>
           </thead>
           {users && (
             <tbody>
               {users.map(user => (
                 <tr key={user.id}>
-                  <th scope="row">{user.id}</th>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
-                  <td>{user.company.name}</td>
                   <td>
                     <Button
                       className="btn btn-outline-primary"
