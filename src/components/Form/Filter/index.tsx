@@ -4,7 +4,7 @@ import { Container } from './styles';
 
 type FilterProps = {
   clearFilters: () => void;
-  onSubmit: any;
+  onSubmit: React.FormEventHandler<HTMLFormElement> | undefined;
 };
 
 export const Filter: React.FC<FilterProps> = ({

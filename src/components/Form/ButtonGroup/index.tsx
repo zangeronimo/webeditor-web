@@ -1,5 +1,12 @@
 import { Container } from './styles';
 
-export const ButtonGroup: React.FC = ({ children }) => {
-  return <Container>{children}</Container>;
+type ButtonGroupProps = {
+  between?: boolean;
+};
+
+export const ButtonGroup: React.FC<ButtonGroupProps> = ({
+  between = false,
+  children,
+}) => {
+  return <Container between={between}>{children}</Container>;
 };

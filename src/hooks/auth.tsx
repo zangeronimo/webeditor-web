@@ -24,12 +24,15 @@ interface AuthState {
   user: User;
 }
 
+const LS_TOKEN = '@WEBEditor:token';
+const LS_USER = '@WEBEditor:user';
+
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>(() => {
-    const token = localStorage.getItem('@WEBEditor:token');
-    const user = localStorage.getItem('@WEBEditor:user');
+    const token = localStorage.getItem(LS_TOKEN);
+    const user = localStorage.getItem(LS_USER);
 
     if (token && user) {
       api.defaults.headers.authorization = `Bearer ${token}`;
@@ -48,7 +51,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
     const { token } = response.data;
 
-    localStorage.setItem('@WEBEditor:token', token);
+    localStorage.setItem(LS_TOKEN, token);
     const decodedToken = jwtDecode(token);
     const { name, avatar } = decodedToken as User;
 
@@ -57,7 +60,7 @@ const AuthProvider: React.FC = ({ children }) => {
       avatar,
     };
 
-    localStorage.setItem('@WEBEditor:user', JSON.stringify(user));
+    localStorage.setItem(LS_USER, JSON.stringify(user));
 
     api.defaults.headers.authorization = `Bearer ${token}`;
 
@@ -65,8 +68,8 @@ const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signOut = useCallback(() => {
-    localStorage.removeItem('@WEBEditor:token');
-    localStorage.removeItem('@WEBEditor:user');
+    localStorage.removeItem(LS_TOKEN);
+    localStorage.removeItem(LS_USER);
 
     setData({} as AuthState);
   }, []);
@@ -77,7 +80,7 @@ const AuthProvider: React.FC = ({ children }) => {
         token: data.token,
         user,
       });
-      localStorage.setItem('@WEBEditor:user', JSON.stringify(user));
+      localStorage.setItem(LS_USER, JSON.stringify(user));
     },
     [data.token],
   );

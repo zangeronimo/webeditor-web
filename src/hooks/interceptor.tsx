@@ -27,7 +27,9 @@ const InterceptorProvider: React.FC = ({ children }) => {
       },
       error => {
         showSpinner(false);
-        signOut();
+        if (error.message === 'Request failed with status code 401') {
+          signOut();
+        }
         return Promise.reject(error);
       },
     );
