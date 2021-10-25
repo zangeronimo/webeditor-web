@@ -26,13 +26,13 @@ export const Sidebar: React.FC = () => {
         {hasOneRole(['INSTITUTIONALPAGE_VIEW']) && (
           <h2
             data-bs-toggle="collapse"
-            data-bs-target="#collapseExample"
-            aria-controls="collapseExample"
+            data-bs-target="#collapseINSTITUTIONAL"
+            aria-controls="collapseINSTITUTIONAL"
           >
             Institucional
           </h2>
         )}
-        <div className="collapse" id="collapseExample">
+        <div className="collapse" id="collapseINSTITUTIONAL">
           <ul>
             {hasRole('INSTITUTIONALPAGE_VIEW') && (
               <li data-bs-toggle="offcanvas">
@@ -42,16 +42,67 @@ export const Sidebar: React.FC = () => {
           </ul>
         </div>
 
+        {hasOneRole([
+          'RECIPELEVELS_VIEW',
+          'RECIPECATEGORIES_VIEW',
+          'RECIPERECIPES_VIEW',
+          'RECIPEIMAGES_VIEW',
+          'RECIPERATINGS_VIEW',
+        ]) && (
+          <h2
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseCULINARIA"
+            aria-controls="collapseCULINARIA"
+          >
+            Culinária
+          </h2>
+        )}
+        <div className="collapse" id="collapseCULINARIA">
+          <ul>
+            {hasRole('RECIPERATINGS_VIEW') && (
+              <li data-bs-toggle="offcanvas">
+                <Link to="/culinaria/avaliacoes">Avaliações</Link>
+              </li>
+            )}
+            {hasRole('RECIPECATEGORIES_VIEW') && (
+              <li data-bs-toggle="offcanvas">
+                <Link to="/culinaria/categorias">Categorias</Link>
+              </li>
+            )}
+            {hasRole('RECIPEIMAGES_VIEW') && (
+              <li>
+                <Link to="/culinaria/imagens" data-bs-toggle="offcanvas">
+                  Imagens
+                </Link>
+              </li>
+            )}
+            {hasRole('RECIPELEVELS_VIEW') && (
+              <li>
+                <Link to="/culinaria/niveis" data-bs-toggle="offcanvas">
+                  Níveis
+                </Link>
+              </li>
+            )}
+            {hasRole('RECIPERECIPES_VIEW') && (
+              <li>
+                <Link to="/culinaria/receitas" data-bs-toggle="offcanvas">
+                  Receitas
+                </Link>
+              </li>
+            )}
+          </ul>
+        </div>
+
         {hasOneRole(['WEBEDITORUSER_VIEW']) && (
           <h2
             data-bs-toggle="collapse"
-            data-bs-target="#collapseExample"
-            aria-controls="collapseExample"
+            data-bs-target="#collapseWEBEDITOR"
+            aria-controls="collapseWEBEDITOR"
           >
             WEBEditor
           </h2>
         )}
-        <div className="collapse" id="collapseExample">
+        <div className="collapse" id="collapseWEBEDITOR">
           <ul>
             {hasRole('WEBEDITORUSER_VIEW') && (
               <li data-bs-toggle="offcanvas">
@@ -68,13 +119,13 @@ export const Sidebar: React.FC = () => {
         ]) && (
           <h2
             data-bs-toggle="collapse"
-            data-bs-target="#collapseExample"
-            aria-controls="collapseExample"
+            data-bs-target="#collapseADMINISTRADOR"
+            aria-controls="collapseADMINISTRADOR"
           >
             Administrador
           </h2>
         )}
-        <div className="collapse" id="collapseExample">
+        <div className="collapse" id="collapseADMINISTRADOR">
           <ul>
             {hasRole('ADMINCOMPANY_VIEW') && (
               <li data-bs-toggle="offcanvas">
