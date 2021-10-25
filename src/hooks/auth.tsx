@@ -16,6 +16,8 @@ interface AuthContextData {
   user: User;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
+  hasRole(role: string): boolean;
+  hasOneRole(roles: string[]): boolean;
   updateUser(user: User): void;
 }
 
@@ -74,6 +76,36 @@ const AuthProvider: React.FC = ({ children }) => {
     setData({} as AuthState);
   }, []);
 
+  const hasRole = useCallback(
+    (role: string) => {
+      if (!role) return false;
+
+      const decodedToken = jwtDecode(data.token);
+      const { roles } = decodedToken as { roles: string[] };
+      if (!roles) return false;
+
+      return roles.includes(role);
+    },
+    [data.token],
+  );
+
+  const hasOneRole = useCallback(
+    (roles: string[]) => {
+      if (!roles) return false;
+
+      let result = false;
+
+      roles.forEach(role => {
+        if (hasRole(role)) {
+          result = true;
+        }
+      });
+
+      return result;
+    },
+    [hasRole],
+  );
+
   const updateUser = useCallback(
     (user: User) => {
       setData({
@@ -87,7 +119,14 @@ const AuthProvider: React.FC = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user: data.user, signIn, signOut, updateUser }}
+      value={{
+        user: data.user,
+        signIn,
+        signOut,
+        updateUser,
+        hasRole,
+        hasOneRole,
+      }}
     >
       {children}
     </AuthContext.Provider>

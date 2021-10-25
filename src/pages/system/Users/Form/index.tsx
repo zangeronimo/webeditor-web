@@ -36,16 +36,19 @@ export const Form: React.FC = () => {
     formState: { errors },
   } = useForm();
 
-  useEffect(() => {
-    if (id) {
-      getUserById(id).then(result => {
+  const handleGetUser = useCallback(
+    (userId: string) => {
+      getUserById(userId).then(result => {
         const { data } = result;
         setValue('name', data.name);
         setValue('email', data.email);
         setUser(result.data);
       });
-    }
-  }, [id, setValue]);
+    },
+    [setValue],
+  );
+
+  useEffect(() => handleGetUser(id), [handleGetUser, id]);
 
   useEffect(() => {
     getModules().then(result => {
@@ -132,7 +135,7 @@ export const Form: React.FC = () => {
         <ButtonGroup between>
           <Button tipo="back" onClick={() => history.push(HISTORY_BACK)} />
           <div>
-            <Button tipo="cancel" onClick={() => history.push(HISTORY_BACK)} />
+            <Button tipo="cancel" onClick={() => handleGetUser(id)} />
             <Button tipo="save" />
           </div>
         </ButtonGroup>

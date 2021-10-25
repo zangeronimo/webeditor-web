@@ -1,8 +1,10 @@
 import { FaChevronCircleLeft } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../../hooks/auth';
 import { Container, Header } from './styles';
 
 export const Sidebar: React.FC = () => {
+  const { hasRole, hasOneRole } = useAuth();
   return (
     <Container
       className="offcanvas offcanvas-start"
@@ -20,29 +22,77 @@ export const Sidebar: React.FC = () => {
         <Link to="/dashboard">
           <h2 data-bs-toggle="offcanvas">Dashboard</h2>
         </Link>
-        <h2
-          data-bs-toggle="collapse"
-          data-bs-target="#collapseExample"
-          aria-controls="collapseExample"
-        >
-          WEBEditor
-        </h2>
+
+        {hasOneRole(['INSTITUTIONALPAGE_VIEW']) && (
+          <h2
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseExample"
+            aria-controls="collapseExample"
+          >
+            Institucional
+          </h2>
+        )}
         <div className="collapse" id="collapseExample">
           <ul>
-            <li data-bs-toggle="offcanvas">
-              <Link to="/webeditor/usuarios">Usuários</Link>
-            </li>
-            <li data-bs-toggle="offcanvas">
-              <Link to="/webeditor/empresas">Empresas</Link>
-            </li>
-            <li data-bs-toggle="offcanvas">
-              <Link to="/webeditor/modulos">Módulos</Link>
-            </li>
-            <li>
-              <Link to="/webeditor/regras" data-bs-toggle="offcanvas">
-                Regras
-              </Link>
-            </li>
+            {hasRole('INSTITUTIONALPAGE_VIEW') && (
+              <li data-bs-toggle="offcanvas">
+                <Link to="/institucional/paginas">Páginas</Link>
+              </li>
+            )}
+          </ul>
+        </div>
+
+        {hasOneRole(['WEBEDITORUSER_VIEW']) && (
+          <h2
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseExample"
+            aria-controls="collapseExample"
+          >
+            WEBEditor
+          </h2>
+        )}
+        <div className="collapse" id="collapseExample">
+          <ul>
+            {hasRole('WEBEDITORUSER_VIEW') && (
+              <li data-bs-toggle="offcanvas">
+                <Link to="/webeditor/usuarios">Usuários</Link>
+              </li>
+            )}
+          </ul>
+        </div>
+
+        {hasOneRole([
+          'ADMINCOMPANY_VIEW',
+          'ADMINMODULE_VIEW',
+          'ADMINROLE_VIEW',
+        ]) && (
+          <h2
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseExample"
+            aria-controls="collapseExample"
+          >
+            Administrador
+          </h2>
+        )}
+        <div className="collapse" id="collapseExample">
+          <ul>
+            {hasRole('ADMINCOMPANY_VIEW') && (
+              <li data-bs-toggle="offcanvas">
+                <Link to="/webeditor/empresas">Empresas</Link>
+              </li>
+            )}
+            {hasRole('ADMINMODULE_VIEW') && (
+              <li data-bs-toggle="offcanvas">
+                <Link to="/webeditor/modulos">Módulos</Link>
+              </li>
+            )}
+            {hasRole('ADMINROLE_VIEW') && (
+              <li>
+                <Link to="/webeditor/regras" data-bs-toggle="offcanvas">
+                  Regras
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>

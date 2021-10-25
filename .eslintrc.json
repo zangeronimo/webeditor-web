@@ -35,6 +35,7 @@
     "@typescript-eslint/no-use-before-define": ["error"],
     "react/react-in-jsx-scope": "off",
     "sonarjs/no-nested-template-literals": "off",
+    "jsx-a11y/aria-role": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
