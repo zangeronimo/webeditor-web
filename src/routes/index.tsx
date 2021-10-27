@@ -2,9 +2,11 @@ import React from 'react';
 import { Switch } from 'react-router-dom';
 import { Denied } from '../pages/system/401';
 import { Dashboard } from '../pages/system/Dashboard';
+import { Roles } from '../pages/system/Roles';
 import { SignIn } from '../pages/system/SignIn';
 import { Users } from '../pages/system/Users';
 import { Form as UserForm } from '../pages/system/Users/Form';
+import { Form as RoleForm } from '../pages/system/Roles/Form';
 
 import Route from './Route';
 
@@ -26,6 +28,20 @@ const Routes: React.FC = () => (
       component={UserForm}
       isPrivate
       role="WEBEDITORUSER_ALTER"
+    />
+
+    <Route
+      path="/webeditor/regras"
+      exact
+      component={Roles}
+      isPrivate
+      role="ADMINROLE_VIEW"
+    />
+    <Route
+      path="/webeditor/regras/form/:id"
+      component={RoleForm}
+      isPrivate
+      role="ADMINROLE_ALTER"
     />
   </Switch>
 );

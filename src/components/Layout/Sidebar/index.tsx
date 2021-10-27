@@ -70,24 +70,18 @@ export const Sidebar: React.FC = () => {
               </li>
             )}
             {hasRole('RECIPEIMAGES_VIEW') && (
-              <li>
-                <Link to="/culinaria/imagens" data-bs-toggle="offcanvas">
-                  Imagens
-                </Link>
+              <li data-bs-toggle="offcanvas">
+                <Link to="/culinaria/imagens">Imagens</Link>
               </li>
             )}
             {hasRole('RECIPELEVELS_VIEW') && (
-              <li>
-                <Link to="/culinaria/niveis" data-bs-toggle="offcanvas">
-                  Níveis
-                </Link>
+              <li data-bs-toggle="offcanvas">
+                <Link to="/culinaria/niveis">Níveis</Link>
               </li>
             )}
             {hasRole('RECIPERECIPES_VIEW') && (
-              <li>
-                <Link to="/culinaria/receitas" data-bs-toggle="offcanvas">
-                  Receitas
-                </Link>
+              <li data-bs-toggle="offcanvas">
+                <Link to="/culinaria/receitas">Receitas</Link>
               </li>
             )}
           </ul>
@@ -138,10 +132,8 @@ export const Sidebar: React.FC = () => {
               </li>
             )}
             {hasRole('ADMINROLE_VIEW') && (
-              <li>
-                <Link to="/webeditor/regras" data-bs-toggle="offcanvas">
-                  Regras
-                </Link>
+              <li data-bs-toggle="offcanvas">
+                <Link to="/webeditor/regras">Regras</Link>
               </li>
             )}
           </ul>
