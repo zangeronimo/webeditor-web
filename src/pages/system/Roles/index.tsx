@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaPencilAlt } from 'react-icons/fa';
+import { FaPencilAlt, FaPlus } from 'react-icons/fa';
 import { useHistory } from 'react-router-dom';
 import { Button } from '../../../components/Form/Button';
+import { ButtonGroup } from '../../../components/Form/ButtonGroup';
 import { Filter } from '../../../components/Form/Filter';
 import Input from '../../../components/Form/Input';
+import Select from '../../../components/Form/Select';
 import { useTitle } from '../../../hooks/title';
 import { useToast } from '../../../hooks/toast';
+import { getModules, Module } from '../../../services/system/module.service';
 import {
   FilterRole,
   getRoles,
@@ -17,6 +20,7 @@ import { Container } from './styles';
 export const Roles: React.FC = () => {
   const { setTitle } = useTitle();
   const [roles, setRoles] = useState<Role[]>([]);
+  const [modules, setModules] = useState<Module[]>([]);
   const [filter, setFilter] = useState({ params: {} } as FilterRole);
 
   const { register, handleSubmit, reset } = useForm();
@@ -25,6 +29,10 @@ export const Roles: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => setTitle('Regras'), [setTitle]);
+
+  useEffect(() => {
+    getModules().then(result => setModules(result.data));
+  }, []);
 
   useEffect(() => {
     getRoles(filter)
@@ -42,6 +50,7 @@ export const Roles: React.FC = () => {
     const newFilter = { params: {} } as FilterRole;
     if (data.name) newFilter.params.name = data.name;
     if (data.label) newFilter.params.label = data.label;
+    if (data.moduleId) newFilter.params.moduleId = data.moduleId;
 
     setFilter(newFilter);
   }, []);
@@ -54,9 +63,42 @@ export const Roles: React.FC = () => {
   return (
     <Container>
       <Filter clearFilters={clearFilter} onSubmit={handleSubmit(onFilter)}>
-        <Input label="Nome" name="name" register={register} />
-        <Input label="Legenda" name="label" register={register} />
+        <Input
+          width="col-12 col-sm-5 col-md-3"
+          label="Nome"
+          name="name"
+          register={register}
+        />
+        <Input
+          width="col-12 col-sm-5 col-md-3"
+          label="Legenda"
+          name="label"
+          register={register}
+        />
+        <Select
+          width="col-12 col-sm-9 col-md-3"
+          label="Módulo"
+          name="moduleId"
+          register={register}
+        >
+          <option value="">Todos</option>
+          {modules &&
+            modules.map(module => (
+              <option key={module.id} value={module.id}>
+                {module.name}
+              </option>
+            ))}
+        </Select>
       </Filter>
+      <ButtonGroup>
+        <Button
+          className="btn btn-outline-primary"
+          onClick={() => history.push('/webeditor/regras/form')}
+        >
+          <FaPlus /> Nova Regra
+        </Button>
+      </ButtonGroup>
+      <hr />
       <div className="table-responsive">
         <table className="table table-striped table-hover table-borderless align-middle">
           <thead>

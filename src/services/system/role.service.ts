@@ -12,7 +12,7 @@ export type Role = {
 };
 
 export type RoleData = {
-  id: string;
+  id?: string;
   name: string;
   label: string;
   module: { id: string };
@@ -22,6 +22,7 @@ export type FilterRole = {
   params: {
     name: string;
     label: string;
+    moduleId: string;
   };
 };
 
@@ -30,6 +31,9 @@ export const getRoles = (filter?: FilterRole): Promise<AxiosResponse<Role[]>> =>
 
 export const getRoleById = (id: string): Promise<AxiosResponse<Role>> =>
   api.get(`/roles/${id}`);
+
+export const addRole = (data: RoleData): Promise<AxiosResponse<Role>> =>
+  api.post('/roles', data);
 
 export const updateRole = (
   id: string,

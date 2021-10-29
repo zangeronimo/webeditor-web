@@ -3,11 +3,14 @@ import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button } from '../../../../components/Form/Button';
 import { ButtonGroup } from '../../../../components/Form/ButtonGroup';
+import { FormGroup } from '../../../../components/Form/FormGroup';
 import Input from '../../../../components/Form/Input';
+import Select from '../../../../components/Form/Select';
 import { useTitle } from '../../../../hooks/title';
 import { useToast } from '../../../../hooks/toast';
 import { getModules, Module } from '../../../../services/system/module.service';
 import {
+  addRole,
   getRoleById,
   RoleData,
   updateRole,
@@ -57,29 +60,54 @@ export const Form: React.FC = () => {
 
   const onSubmit = useCallback(
     (values: { name: string; label: string; module: string }) => {
-      const data: RoleData = {
-        id,
-        name: values.name,
-        label: values.label,
-        module: { id: values.module },
-      };
+      if (id) {
+        const data: RoleData = {
+          id,
+          name: values.name,
+          label: values.label,
+          module: { id: values.module },
+        };
 
-      updateRole(id, data)
-        .then(result => {
-          addToast({
-            title: 'Sucesso',
-            type: 'success',
-            description: `Regra ${result.data.label} atualizada.`,
+        updateRole(id, data)
+          .then(result => {
+            addToast({
+              title: 'Sucesso',
+              type: 'success',
+              description: `Regra ${result.data.label} atualizada.`,
+            });
+            history.push(HISTORY_BACK);
+          })
+          .catch(() => {
+            addToast({
+              title: 'Falha',
+              type: 'error',
+              description: `Falha ao tentar atualizar a regra.`,
+            });
           });
-          history.push(HISTORY_BACK);
-        })
-        .catch(() => {
-          addToast({
-            title: 'Falha',
-            type: 'error',
-            description: `Falha ao tentar atualizar a regra.`,
+      } else {
+        const data: RoleData = {
+          name: values.name,
+          label: values.label,
+          module: { id: values.module },
+        };
+
+        addRole(data)
+          .then(result => {
+            addToast({
+              title: 'Sucesso',
+              type: 'success',
+              description: `Regra ${result.data.label} adicionada.`,
+            });
+            history.push(HISTORY_BACK);
+          })
+          .catch(() => {
+            addToast({
+              title: 'Falha',
+              type: 'error',
+              description: `Falha ao tentar adicionar a regra.`,
+            });
           });
-        });
+      }
     },
     [addToast, history, id],
   );
@@ -87,19 +115,36 @@ export const Form: React.FC = () => {
   return (
     <Container>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          label="Nome"
-          name="name"
-          error={errors.name?.message}
-          register={register}
-        />
-        <Input
-          label="Legenda"
-          name="label"
-          error={errors.label?.message}
-          register={register}
-        />
-        <Input label="Módulo" name="module" register={register} />
+        <FormGroup>
+          <Input
+            width="col-12 col-sm-5 col-md-3"
+            label="Nome"
+            name="name"
+            error={errors.name?.message}
+            register={register}
+          />
+          <Input
+            width="col-12 col-sm-5 col-md-3"
+            label="Legenda"
+            name="label"
+            error={errors.label?.message}
+            register={register}
+          />
+          <Select
+            width="col-12 col-sm-5 col-md-3"
+            label="Módulo"
+            name="module"
+            register={register}
+          >
+            <option value="">Selecione</option>
+            {modules &&
+              modules.map(module => (
+                <option key={module.id} value={module.id}>
+                  {module.name}
+                </option>
+              ))}
+          </Select>
+        </FormGroup>
 
         <ButtonGroup between>
           <Button tipo="back" onClick={() => history.push(HISTORY_BACK)} />

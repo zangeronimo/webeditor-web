@@ -5,6 +5,7 @@ export const Container = styled.div`
   form {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 1rem;
   }
 

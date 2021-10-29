@@ -38,7 +38,7 @@ const Routes: React.FC = () => (
       role="ADMINROLE_VIEW"
     />
     <Route
-      path="/webeditor/regras/form/:id"
+      path="/webeditor/regras/form/:id?"
       component={RoleForm}
       isPrivate
       role="ADMINROLE_ALTER"

@@ -39,13 +39,13 @@ export const Container = styled.div<ContainerProps>`
     font-size: 0.75rem;
   }
 
-  div.input {
+  div.select {
     display: flex;
     flex-direction: column;
     flex: 1;
   }
 
-  input {
+  select {
     flex: 1;
     background: transparent;
     border: 0;

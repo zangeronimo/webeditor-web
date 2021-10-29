@@ -1,40 +1,38 @@
-import React, { InputHTMLAttributes, useState, useCallback } from 'react';
+import React, { SelectHTMLAttributes, useState, useCallback } from 'react';
 import { FieldValues, UseFormRegister } from 'react-hook-form';
-import { IconBaseProps } from 'react-icons';
 import { FiAlertCircle } from 'react-icons/fi';
 
 import { Container, Error } from './styles';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   name: string;
   label: string;
-  error?: string;
   width?: string;
+  error?: string;
   containerStyle?: Record<string, unknown>;
   register: UseFormRegister<FieldValues>;
-  icon?: React.ComponentType<IconBaseProps>;
 }
 
-const Input: React.FC<InputProps> = ({
+const Select: React.FC<SelectProps> = ({
   name,
   label,
   width = 'col-12',
   containerStyle = {},
-  icon: Icon,
   register,
   error = '',
+  children,
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
 
-  const handleInputFocus = useCallback(() => {
+  const handleSelectFocus = useCallback(() => {
     setIsFocused(true);
   }, []);
 
-  const handleInputBlur = useCallback(() => {
+  const handleSelectBlur = useCallback(() => {
     setIsFocused(false);
-    const element = document.getElementById(name) as HTMLInputElement;
+    const element = document.getElementById(name) as HTMLSelectElement;
     setIsFilled(!!element?.value);
   }, [name]);
 
@@ -44,20 +42,21 @@ const Input: React.FC<InputProps> = ({
       isErrored={!!error}
       isFocused={isFocused}
       isFilled={isFilled}
-      data-testid="input-container"
+      data-testid="select-container"
       className={width}
     >
-      {Icon && <Icon size={20} />}
-      <div className="input">
+      <div className="select">
         <label htmlFor={name}>{label}</label>
-        <input
-          onFocus={handleInputFocus}
+        <select
+          onFocus={handleSelectFocus}
           autoComplete="false"
           id={name}
           {...register(name)}
-          onBlur={handleInputBlur}
+          onBlur={handleSelectBlur}
           {...rest}
-        />
+        >
+          {children}
+        </select>
       </div>
 
       {error && (
@@ -69,4 +68,4 @@ const Input: React.FC<InputProps> = ({
   );
 };
 
-export default Input;
+export default Select;
