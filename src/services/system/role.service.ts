@@ -5,6 +5,7 @@ export type Role = {
   id: string;
   name: string;
   label: string;
+  order: number;
   module: {
     id: string;
     name: string;
@@ -23,6 +24,7 @@ export type FilterRole = {
     name: string;
     label: string;
     moduleId: string;
+    order: { field: string; order: string };
   };
 };
 
@@ -31,6 +33,11 @@ export const getRoles = (filter?: FilterRole): Promise<AxiosResponse<Role[]>> =>
 
 export const getRoleById = (id: string): Promise<AxiosResponse<Role>> =>
   api.get(`/roles/${id}`);
+
+export const updateOrder = (
+  id: string,
+  value: number,
+): Promise<AxiosResponse<Role>> => api.patch(`/roles/${id}`, { order: value });
 
 export const addRole = (data: RoleData): Promise<AxiosResponse<Role>> =>
   api.post('/roles', data);
