@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaPencilAlt, FaPlus } from 'react-icons/fa';
+import { FaPencilAlt, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Button } from '../../../components/Form/Button';
 import { ButtonGroup } from '../../../components/Form/ButtonGroup';
@@ -17,6 +17,7 @@ import { useTitle } from '../../../hooks/title';
 import { useToast } from '../../../hooks/toast';
 import { getModules, Module } from '../../../services/system/module.service';
 import {
+  delRole,
   FilterRole,
   getRoles,
   Role,
@@ -24,11 +25,15 @@ import {
 } from '../../../services/system/role.service';
 import { debounce } from '../../../utils/debounce';
 import { Container } from './styles';
+import { Pagination } from '../../../components/Form/Pagination';
+import { useAuth } from '../../../hooks/auth';
 
 export const Roles: React.FC = () => {
   const { setTitle } = useTitle();
   const [roles, setRoles] = useState<Role[]>([]);
   const [modules, setModules] = useState<Module[]>([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [filter, setFilter] = useState({
     params: {},
   } as FilterRole);
@@ -39,7 +44,7 @@ export const Roles: React.FC = () => {
   const by = query.get('by');
 
   const { register, handleSubmit, reset } = useForm();
-
+  const { hasRole } = useAuth();
   const { addToast } = useToast();
   const history = useHistory();
 
@@ -49,12 +54,17 @@ export const Roles: React.FC = () => {
     getModules().then(result => setModules(result.data));
   }, []);
 
-  useEffect(() => {
+  const handleGetRoles = useCallback(() => {
     if (order && by) {
       filter.params.order = { field: order, order: by };
     }
+    filter.params.page = page;
+
     getRoles(filter)
-      .then(result => setRoles(result.data))
+      .then(result => {
+        setRoles(result.data.data);
+        setTotal(result.data.total);
+      })
       .catch(() => {
         addToast({
           title: 'Algo deu errado',
@@ -62,12 +72,12 @@ export const Roles: React.FC = () => {
           type: 'error',
         });
       });
-  }, [addToast, by, filter, order]);
+  }, [addToast, by, filter, order, page]);
+  useEffect(() => handleGetRoles(), [handleGetRoles]);
 
   const onFilter = useCallback(data => {
     const newFilter = { params: {} } as FilterRole;
-    if (data.name) newFilter.params.name = data.name;
-    if (data.label) newFilter.params.label = data.label;
+    if (data.search) newFilter.params.search = data.search;
     if (data.moduleId) newFilter.params.moduleId = data.moduleId;
 
     setFilter(newFilter);
@@ -82,19 +92,32 @@ export const Roles: React.FC = () => {
     debounce(() => updateOrder(id, orderNumber));
   }, []);
 
+  const noAlter = useMemo(() => !hasRole('ADMINROLE_ALTER'), [hasRole]);
+
+  const handleDelete = useCallback(
+    (id: string) => {
+      if (window.confirm('Deseja realmente excluir o registro?')) {
+        delRole(id).then(() => {
+          addToast({
+            title: 'Registro excluído',
+            description: 'Registro excluído com sucesso.',
+            type: 'success',
+          });
+          if (page > 1) setPage(1);
+          else handleGetRoles();
+        });
+      }
+    },
+    [addToast, page, handleGetRoles],
+  );
+
   return (
     <Container>
       <Filter clearFilters={clearFilter} onSubmit={handleSubmit(onFilter)}>
         <Input
           width="col-12 col-sm-5 col-md-3"
-          label="Nome"
-          name="name"
-          register={register}
-        />
-        <Input
-          width="col-12 col-sm-5 col-md-3"
-          label="Legenda"
-          name="label"
+          label="Palavra chave"
+          name="search"
           register={register}
         />
         <Select
@@ -115,9 +138,11 @@ export const Roles: React.FC = () => {
       <ButtonGroup>
         <Button
           className="btn btn-outline-primary"
+          title="Adicionar Registro"
           onClick={() => history.push('/webeditor/regras/form')}
+          disabled={noAlter}
         >
-          <FaPlus /> Nova Regra
+          <FaPlus /> Nova Registro
         </Button>
       </ButtonGroup>
       <hr />
@@ -126,7 +151,7 @@ export const Roles: React.FC = () => {
           <THead>
             <Th orderBy="name">Nome</Th>
             <Th orderBy="label">Legenda</Th>
-            <Th>Módulo</Th>
+            <Th orderBy="module.name">Módulo</Th>
             <Th orderBy="order">Ordem</Th>
             <Th>Ações</Th>
           </THead>
@@ -141,6 +166,7 @@ export const Roles: React.FC = () => {
                     <input
                       type="number"
                       name="ordem"
+                      disabled={noAlter}
                       defaultValue={role.order}
                       onChange={e =>
                         handleOrder(role.id, +e.currentTarget.value)
@@ -148,20 +174,33 @@ export const Roles: React.FC = () => {
                     />
                   </Td>
                   <Td>
-                    <Button
-                      className="btn btn-outline-primary"
-                      onClick={() =>
-                        history.push(`/webeditor/regras/form/${role.id}`)
-                      }
-                    >
-                      <FaPencilAlt />
-                    </Button>
+                    <ButtonGroup>
+                      <Button
+                        className="btn btn-outline-primary"
+                        disabled={noAlter}
+                        title="Editar Regitro"
+                        onClick={() =>
+                          history.push(`/webeditor/regras/form/${role.id}`)
+                        }
+                      >
+                        <FaPencilAlt />
+                      </Button>
+                      <Button
+                        className="btn btn-outline-danger"
+                        disabled={!hasRole('ADMINROLE_DELETE')}
+                        title="Excluir Registro"
+                        onClick={() => handleDelete(role.id)}
+                      >
+                        <FaTrashAlt />
+                      </Button>
+                    </ButtonGroup>
                   </Td>
                 </Tr>
               ))}
             </TBody>
           )}
         </Table>
+        <Pagination total={total} currentPage={page} onPageChange={setPage} />
       </div>
     </Container>
   );

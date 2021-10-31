@@ -21,15 +21,21 @@ export type RoleData = {
 
 export type FilterRole = {
   params: {
-    name: string;
-    label: string;
+    search: string;
     moduleId: string;
     order: { field: string; order: string };
+    page: number;
   };
 };
 
-export const getRoles = (filter?: FilterRole): Promise<AxiosResponse<Role[]>> =>
-  api.get('/roles', filter);
+export type PaginationResult = {
+  data: Role[];
+  total: number;
+};
+
+export const getRoles = (
+  filter?: FilterRole,
+): Promise<AxiosResponse<PaginationResult>> => api.get('/roles', filter);
 
 export const getRoleById = (id: string): Promise<AxiosResponse<Role>> =>
   api.get(`/roles/${id}`);
@@ -46,3 +52,6 @@ export const updateRole = (
   id: string,
   data: RoleData,
 ): Promise<AxiosResponse<Role>> => api.put(`/roles/${id}`, data);
+
+export const delRole = (id: string): Promise<AxiosResponse<Role>> =>
+  api.delete(`/roles/${id}`);

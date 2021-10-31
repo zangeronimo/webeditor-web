@@ -11,6 +11,8 @@ export default createGlobalStyle`
     --gray-700: #495057;
     --gray-800: #343a40;
     --gray-900: #212529;
+
+    --blue-500: #0d6efd;
   }
 
   input:-webkit-autofill,

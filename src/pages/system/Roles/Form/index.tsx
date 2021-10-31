@@ -15,6 +15,7 @@ import {
   RoleData,
   updateRole,
 } from '../../../../services/system/role.service';
+import { debounce } from '../../../../utils/debounce';
 
 import { Container } from './styles';
 
@@ -36,25 +37,29 @@ export const Form: React.FC = () => {
     formState: { errors },
   } = useForm();
 
-  const handleGetRole = useCallback(
-    (roleId: string) => {
-      getRoleById(roleId).then(result => {
-        const { data } = result;
-        setValue('name', data.name);
-        setValue('label', data.label);
-        setValue('module', data.module.id);
-      });
-    },
-    [setValue],
-  );
-
-  useEffect(() => handleGetRole(id), [handleGetRole, id]);
-
   useEffect(() => {
     getModules().then(result => {
       setModules(result.data);
     });
   }, []);
+
+  const handleGetRole = useCallback(
+    (roleId: string) => {
+      if (roleId) {
+        getRoleById(roleId).then(result => {
+          const { data } = result;
+          debounce(() => {
+            setValue('name', data.name);
+            setValue('label', data.label);
+            setValue('module', data.module.id);
+          }, 1);
+        });
+      }
+    },
+    [setValue],
+  );
+
+  useEffect(() => handleGetRole(id), [handleGetRole, id]);
 
   useEffect(() => setTitle('Regras / Formulário'), [setTitle]);
 

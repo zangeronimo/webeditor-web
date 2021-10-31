@@ -35,8 +35,10 @@ export const Sidebar: React.FC = () => {
         <div className="collapse" id="collapseINSTITUTIONAL">
           <ul>
             {hasRole('INSTITUTIONALPAGE_VIEW') && (
-              <li data-bs-toggle="offcanvas">
-                <Link to="/institucional/paginas">Páginas</Link>
+              <li>
+                <Link to="/institucional/paginas">
+                  <span data-bs-toggle="offcanvas">Páginas</span>
+                </Link>
               </li>
             )}
           </ul>
@@ -60,28 +62,38 @@ export const Sidebar: React.FC = () => {
         <div className="collapse" id="collapseCULINARIA">
           <ul>
             {hasRole('RECIPERATINGS_VIEW') && (
-              <li data-bs-toggle="offcanvas">
-                <Link to="/culinaria/avaliacoes">Avaliações</Link>
+              <li>
+                <Link to="/culinaria/avaliacoes">
+                  <span data-bs-toggle="offcanvas">Avaliações</span>
+                </Link>
               </li>
             )}
             {hasRole('RECIPECATEGORIES_VIEW') && (
-              <li data-bs-toggle="offcanvas">
-                <Link to="/culinaria/categorias">Categorias</Link>
+              <li>
+                <Link to="/culinaria/categorias">
+                  <span data-bs-toggle="offcanvas">Categorias</span>
+                </Link>
               </li>
             )}
             {hasRole('RECIPEIMAGES_VIEW') && (
-              <li data-bs-toggle="offcanvas">
-                <Link to="/culinaria/imagens">Imagens</Link>
+              <li>
+                <Link to="/culinaria/imagens">
+                  <span data-bs-toggle="offcanvas">Imagens</span>
+                </Link>
               </li>
             )}
             {hasRole('RECIPELEVELS_VIEW') && (
-              <li data-bs-toggle="offcanvas">
-                <Link to="/culinaria/niveis">Níveis</Link>
+              <li>
+                <Link to="/culinaria/niveis">
+                  <span data-bs-toggle="offcanvas">Níveis</span>
+                </Link>
               </li>
             )}
             {hasRole('RECIPERECIPES_VIEW') && (
-              <li data-bs-toggle="offcanvas">
-                <Link to="/culinaria/receitas">Receitas</Link>
+              <li>
+                <Link to="/culinaria/receitas">
+                  <span data-bs-toggle="offcanvas">Receitas</span>
+                </Link>
               </li>
             )}
           </ul>
@@ -99,8 +111,10 @@ export const Sidebar: React.FC = () => {
         <div className="collapse" id="collapseWEBEDITOR">
           <ul>
             {hasRole('WEBEDITORUSER_VIEW') && (
-              <li data-bs-toggle="offcanvas">
-                <Link to="/webeditor/usuarios">Usuários</Link>
+              <li>
+                <Link to="/webeditor/usuarios">
+                  <span data-bs-toggle="offcanvas">Usuários</span>
+                </Link>
               </li>
             )}
           </ul>
@@ -122,18 +136,24 @@ export const Sidebar: React.FC = () => {
         <div className="collapse" id="collapseADMINISTRADOR">
           <ul>
             {hasRole('ADMINCOMPANY_VIEW') && (
-              <li data-bs-toggle="offcanvas">
-                <Link to="/webeditor/empresas">Empresas</Link>
+              <li>
+                <Link to="/webeditor/empresas">
+                  <span data-bs-toggle="offcanvas">Empresas</span>
+                </Link>
               </li>
             )}
             {hasRole('ADMINMODULE_VIEW') && (
-              <li data-bs-toggle="offcanvas">
-                <Link to="/webeditor/modulos">Módulos</Link>
+              <li>
+                <Link to="/webeditor/modulos">
+                  <span data-bs-toggle="offcanvas">Módulos</span>
+                </Link>
               </li>
             )}
             {hasRole('ADMINROLE_VIEW') && (
-              <li data-bs-toggle="offcanvas">
-                <Link to="/webeditor/regras">Regras</Link>
+              <li>
+                <Link to="/webeditor/regras">
+                  <span data-bs-toggle="offcanvas">Regras</span>
+                </Link>
               </li>
             )}
           </ul>
