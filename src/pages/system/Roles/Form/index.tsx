@@ -153,7 +153,7 @@ export const Form: React.FC = () => {
 
         <ButtonGroup between>
           <Button tipo="back" onClick={() => history.push(HISTORY_BACK)} />
-          <div>
+          <div className="right">
             <Button tipo="cancel" onClick={() => handleGetRole(id)} />
             <Button tipo="save" />
           </div>

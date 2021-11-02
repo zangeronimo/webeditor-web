@@ -12,7 +12,7 @@ export const Container = styled.div<ContainerProps>`
   gap: 0.5rem;
   margin-top: 0.5rem;
 
-  div {
+  .right {
     display: flex;
     align-items: center;
     gap: 0.5rem;

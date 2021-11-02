@@ -27,6 +27,7 @@ import { debounce } from '../../../utils/debounce';
 import { Container } from './styles';
 import { Pagination } from '../../../components/Form/Pagination';
 import { useAuth } from '../../../hooks/auth';
+import { Modal } from '../../../components/Modal';
 
 export const Roles: React.FC = () => {
   const { setTitle } = useTitle();
@@ -96,17 +97,15 @@ export const Roles: React.FC = () => {
 
   const handleDelete = useCallback(
     (id: string) => {
-      if (window.confirm('Deseja realmente excluir o registro?')) {
-        delRole(id).then(() => {
-          addToast({
-            title: 'Registro excluído',
-            description: 'Registro excluído com sucesso.',
-            type: 'success',
-          });
-          if (page > 1) setPage(1);
-          else handleGetRoles();
+      delRole(id).then(() => {
+        addToast({
+          title: 'Registro excluído',
+          description: 'Registro excluído com sucesso.',
+          type: 'success',
         });
-      }
+        if (page > 1) setPage(1);
+        else handleGetRoles();
+      });
     },
     [addToast, page, handleGetRoles],
   );
@@ -185,14 +184,21 @@ export const Roles: React.FC = () => {
                       >
                         <FaPencilAlt />
                       </Button>
-                      <Button
-                        className="btn btn-outline-danger"
+                      <Modal
                         disabled={!hasRole('ADMINROLE_DELETE')}
-                        title="Excluir Registro"
-                        onClick={() => handleDelete(role.id)}
+                        button={
+                          <Button
+                            className="btn btn-outline-danger"
+                            disabled={!hasRole('ADMINROLE_DELETE')}
+                            title="Excluir Registro"
+                          >
+                            <FaTrashAlt />
+                          </Button>
+                        }
+                        confirm={() => handleDelete(role.id)}
                       >
-                        <FaTrashAlt />
-                      </Button>
+                        Deseja realmente excluir o registro?
+                      </Modal>
                     </ButtonGroup>
                   </Td>
                 </Tr>
