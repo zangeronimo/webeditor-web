@@ -7,8 +7,10 @@ import { SignIn } from '../pages/system/SignIn';
 import { Users } from '../pages/system/Users';
 import { Form as UserForm } from '../pages/system/Users/Form';
 import { Form as RoleForm } from '../pages/system/Roles/Form';
+import { Form as CompanyForm } from '../pages/system/Companies/Form';
 
 import Route from './Route';
+import { Companies } from '../pages/system/Companies';
 
 const Routes: React.FC = () => (
   <Switch>
@@ -42,6 +44,20 @@ const Routes: React.FC = () => (
       component={RoleForm}
       isPrivate
       role="ADMINROLE_ALTER"
+    />
+
+    <Route
+      path="/webeditor/empresas"
+      exact
+      component={Companies}
+      isPrivate
+      role="ADMINCOMPANY_VIEW"
+    />
+    <Route
+      path="/webeditor/empresas/form/:id?"
+      component={CompanyForm}
+      isPrivate
+      role="ADMINCOMPANY_ALTER"
     />
   </Switch>
 );

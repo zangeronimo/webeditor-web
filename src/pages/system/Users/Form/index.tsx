@@ -7,7 +7,10 @@ import Checkbox from '../../../../components/Form/Checkbox';
 import Input from '../../../../components/Form/Input';
 import { useTitle } from '../../../../hooks/title';
 import { useToast } from '../../../../hooks/toast';
-import { getModules, Module } from '../../../../services/system/module.service';
+import {
+  getModulesByCompany,
+  Module,
+} from '../../../../services/system/module.service';
 import {
   getUserById,
   updateUser,
@@ -51,7 +54,7 @@ export const Form: React.FC = () => {
   useEffect(() => handleGetUser(id), [handleGetUser, id]);
 
   useEffect(() => {
-    getModules().then(result => {
+    getModulesByCompany().then(result => {
       const roles = user.roles?.map(role => role.id);
       setValue('roles', roles);
       setModules(result.data);
@@ -134,7 +137,7 @@ export const Form: React.FC = () => {
         </div>
         <ButtonGroup between>
           <Button tipo="back" onClick={() => history.push(HISTORY_BACK)} />
-          <div>
+          <div className="right">
             <Button tipo="cancel" onClick={() => handleGetUser(id)} />
             <Button tipo="save" />
           </div>

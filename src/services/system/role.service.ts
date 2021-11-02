@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import api from '../api';
+import { BaseFilter, PaginationResult } from '../BaseTypes';
 
 export type Role = {
   id: string;
@@ -19,23 +20,16 @@ export type RoleData = {
   module: { id: string };
 };
 
-export type FilterRole = {
+export type FilterRole = BaseFilter & {
   params: {
     search: string;
     moduleId: string;
-    order: { field: string; order: string };
-    page: number;
   };
-};
-
-export type PaginationResult = {
-  data: Role[];
-  total: number;
 };
 
 export const getRoles = (
   filter?: FilterRole,
-): Promise<AxiosResponse<PaginationResult>> => api.get('/roles', filter);
+): Promise<AxiosResponse<PaginationResult<Role>>> => api.get('/roles', filter);
 
 export const getRoleById = (id: string): Promise<AxiosResponse<Role>> =>
   api.get(`/roles/${id}`);

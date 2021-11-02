@@ -6,9 +6,14 @@ import { Container } from './styles';
 
 type ThProps = TableHTMLAttributes<HTMLTableCellElement> & {
   orderBy?: string;
+  align?: 'flex-start' | 'center' | 'flex-end';
 };
 
-export const Th: React.FC<ThProps> = ({ orderBy = '', children }) => {
+export const Th: React.FC<ThProps> = ({
+  orderBy = '',
+  align = 'flex-start',
+  children,
+}) => {
   const history = useHistory();
   const [order, setOrder] = useState('ASC');
 
@@ -18,7 +23,7 @@ export const Th: React.FC<ThProps> = ({ orderBy = '', children }) => {
   }, [history, order, orderBy]);
 
   return (
-    <Container scope="col">
+    <Container scope="col" justify={align}>
       <div>
         {children}
         {orderBy && (

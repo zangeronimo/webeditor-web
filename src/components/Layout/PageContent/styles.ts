@@ -4,6 +4,7 @@ export const Container = styled.div`
   position: relative;
   padding: 1rem;
   margin: 0 1rem;
+  margin-bottom: 1rem;
   border-radius: 8px;
   background: var(--gray-200);
 

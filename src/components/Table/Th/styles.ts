@@ -1,10 +1,20 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const Container = styled.th`
+type ContainerProps = {
+  justify: string;
+};
+
+export const Container = styled.th<ContainerProps>`
   div {
     display: flex;
-    align-items: center;
     gap: 0.5rem;
+    white-space: nowrap;
+
+    ${props =>
+      props.justify &&
+      css`
+        justify-content: ${props.justify};
+      `}
   }
 
   button {

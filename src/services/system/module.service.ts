@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import api from '../api';
+import { BaseFilter } from '../BaseTypes';
 import { Role } from './role.service';
 
 export type Module = {
@@ -8,5 +9,35 @@ export type Module = {
   roles: Role[];
 };
 
-export const getModules = (): Promise<AxiosResponse<Module[]>> =>
-  api.get<Module[]>('/modules');
+export type ModuleData = {
+  id?: string;
+  name: string;
+  roles: { id: string }[];
+};
+
+export type FilterModule = BaseFilter & {
+  params: {
+    name: string;
+  };
+};
+
+export const getModules = (
+  filter?: FilterModule,
+): Promise<AxiosResponse<Module[]>> => api.get('/modules', filter);
+
+export const getModuleById = (id: string): Promise<AxiosResponse<Module>> =>
+  api.get(`/modules/${id}`);
+
+export const addModule = (data: ModuleData): Promise<AxiosResponse<Module>> =>
+  api.post('/modules', data);
+
+export const updateModule = (
+  id: string,
+  data: ModuleData,
+): Promise<AxiosResponse<Module>> => api.put(`/modules/${id}`, data);
+
+export const delModule = (id: string): Promise<AxiosResponse<Module>> =>
+  api.delete(`/modules/${id}`);
+
+export const getModulesByCompany = (): Promise<AxiosResponse<Module[]>> =>
+  api.get<Module[]>('/modules/user');
