@@ -28,7 +28,7 @@ const Routes: React.FC = () => (
       role="WEBEDITORUSER_VIEW"
     />
     <Route
-      path="/webeditor/usuarios/form/:id"
+      path="/webeditor/usuarios/form/:id?"
       component={UserForm}
       isPrivate
       role="WEBEDITORUSER_ALTER"

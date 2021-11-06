@@ -141,7 +141,7 @@ export const Roles: React.FC = () => {
           onClick={() => history.push('/webeditor/regras/form')}
           disabled={noAlter}
         >
-          <FaPlus /> Nova Registro
+          <FaPlus /> Novo Registro
         </Button>
       </ButtonGroup>
       <hr />

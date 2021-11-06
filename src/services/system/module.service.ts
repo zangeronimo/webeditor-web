@@ -16,7 +16,7 @@ export type ModuleData = {
 
 export type FilterModule = BaseFilter & {
   params: {
-    name: string;
+    name?: string;
   };
 };
 

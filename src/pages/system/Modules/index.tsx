@@ -113,7 +113,7 @@ export const Modules: React.FC = () => {
           onClick={() => history.push('/webeditor/modulos/form')}
           disabled={noAlter}
         >
-          <FaPlus /> Nova Registro
+          <FaPlus /> Novo Registro
         </Button>
       </ButtonGroup>
       <hr />

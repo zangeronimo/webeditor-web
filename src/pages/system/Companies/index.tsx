@@ -113,7 +113,7 @@ export const Companies: React.FC = () => {
           onClick={() => history.push('/webeditor/empresas/form')}
           disabled={noAlter}
         >
-          <FaPlus /> Nova Registro
+          <FaPlus /> Novo Registro
         </Button>
       </ButtonGroup>
       <hr />

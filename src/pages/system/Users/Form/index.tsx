@@ -12,6 +12,7 @@ import {
   Module,
 } from '../../../../services/system/module.service';
 import {
+  addUser,
   getUserById,
   updateUser,
   User,
@@ -64,30 +65,62 @@ export const Form: React.FC = () => {
   useEffect(() => setTitle('Usuários / Formulário'), [setTitle]);
 
   const onSubmit = useCallback(
-    (values: { name: string; email: string; roles: string[] }) => {
-      const data: UserData = {
-        id,
-        name: values.name,
-        email: values.email,
-        roles: values.roles?.map(role => ({ id: role })),
-      };
+    (values: {
+      name: string;
+      email: string;
+      password: string;
+      roles: string[];
+    }) => {
+      if (id) {
+        const data: UserData = {
+          id,
+          name: values.name,
+          email: values.email,
+          password: values.password,
+          roles: values.roles?.map(role => ({ id: role })),
+        };
 
-      updateUser(id, data)
-        .then(result => {
-          addToast({
-            title: 'Sucesso',
-            type: 'success',
-            description: `Usuário ${result.data.name} atualizado.`,
+        updateUser(id, data)
+          .then(result => {
+            addToast({
+              title: 'Sucesso',
+              type: 'success',
+              description: `Usuário ${result.data.name} atualizado.`,
+            });
+            history.push(HISTORY_BACK);
+          })
+          .catch(() => {
+            addToast({
+              title: 'Falha',
+              type: 'error',
+              description: `Falha ao tentar atualizar o usuário.`,
+            });
           });
-          history.push(HISTORY_BACK);
-        })
-        .catch(() => {
-          addToast({
-            title: 'Falha',
-            type: 'error',
-            description: `Falha ao tentar atualizar o usuário.`,
+      } else {
+        const data: UserData = {
+          name: values.name,
+          email: values.email,
+          password: values.password,
+          roles: values.roles?.map(role => ({ id: role })),
+        };
+
+        addUser(data)
+          .then(result => {
+            addToast({
+              title: 'Sucesso',
+              type: 'success',
+              description: `Usuário ${result.data.name} adicionado.`,
+            });
+            history.push(HISTORY_BACK);
+          })
+          .catch(() => {
+            addToast({
+              title: 'Falha',
+              type: 'error',
+              description: `Falha ao tentar adicionar o usuário.`,
+            });
           });
-        });
+      }
     },
     [addToast, history, id],
   );
