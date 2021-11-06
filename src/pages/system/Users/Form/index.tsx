@@ -8,7 +8,7 @@ import Input from '../../../../components/Form/Input';
 import { useTitle } from '../../../../hooks/title';
 import { useToast } from '../../../../hooks/toast';
 import {
-  getModulesByCompany,
+  getModulesByUser,
   Module,
 } from '../../../../services/system/module.service';
 import {
@@ -54,7 +54,7 @@ export const Form: React.FC = () => {
   useEffect(() => handleGetUser(id), [handleGetUser, id]);
 
   useEffect(() => {
-    getModulesByCompany().then(result => {
+    getModulesByUser().then(result => {
       const roles = user.roles?.map(role => role.id);
       setValue('roles', roles);
       setModules(result.data);

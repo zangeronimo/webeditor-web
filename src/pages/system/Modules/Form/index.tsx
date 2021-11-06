@@ -1,30 +1,24 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button } from '../../../../components/Form/Button';
 import { ButtonGroup } from '../../../../components/Form/ButtonGroup';
-import Checkbox from '../../../../components/Form/Checkbox';
 import { FormGroup } from '../../../../components/Form/FormGroup';
 import Input from '../../../../components/Form/Input';
 import { useTitle } from '../../../../hooks/title';
 import { useToast } from '../../../../hooks/toast';
 import {
-  addCompany,
-  Company,
-  CompanyData,
-  getCompanyById,
-  updateCompany,
-} from '../../../../services/system/company.service';
-import { getModules, Module } from '../../../../services/system/module.service';
+  addModule,
+  getModuleById,
+  ModuleData,
+  updateModule,
+} from '../../../../services/system/module.service';
 
-import { Container, Modules } from './styles';
+import { Container } from './styles';
 
-const HISTORY_BACK = '/webeditor/empresas';
+const HISTORY_BACK = '/webeditor/modulos';
 
 export const Form: React.FC = () => {
-  const [company, setCompany] = useState({} as Company);
-  const [modules, setModules] = useState<Module[]>([]);
-
   const { addToast } = useToast();
   const history = useHistory();
 
@@ -38,46 +32,36 @@ export const Form: React.FC = () => {
     formState: { errors },
   } = useForm();
 
-  const handleGetCompany = useCallback(
-    (companyId: string) => {
-      if (companyId) {
-        getCompanyById(companyId).then(result => {
+  const handleGetModule = useCallback(
+    (moduleId: string) => {
+      if (moduleId) {
+        getModuleById(moduleId).then(result => {
           const { data } = result;
           setValue('name', data.name);
-          setCompany(result.data);
         });
       }
     },
     [setValue],
   );
 
-  useEffect(() => handleGetCompany(id), [handleGetCompany, id]);
+  useEffect(() => handleGetModule(id), [handleGetModule, id]);
 
-  useEffect(() => setTitle('Empresas / Formulário'), [setTitle]);
-
-  useEffect(() => {
-    getModules().then(result => {
-      const companyModules = company.modules?.map(module => module.id);
-      setValue('modules', companyModules);
-      setModules(result.data.data);
-    });
-  }, [company.modules, setValue]);
+  useEffect(() => setTitle('Módulos / Formulário'), [setTitle]);
 
   const onSubmit = useCallback(
     (values: { name: string; modules: string[] }) => {
       if (id) {
-        const data: CompanyData = {
+        const data: ModuleData = {
           id,
           name: values.name,
-          modules: values.modules?.map(module => ({ id: module })),
         };
 
-        updateCompany(id, data)
+        updateModule(id, data)
           .then(result => {
             addToast({
               title: 'Sucesso',
               type: 'success',
-              description: `Empresa ${result.data.name} atualizada.`,
+              description: `Módulo ${result.data.name} atualizado.`,
             });
             history.push(HISTORY_BACK);
           })
@@ -85,21 +69,20 @@ export const Form: React.FC = () => {
             addToast({
               title: 'Falha',
               type: 'error',
-              description: `Falha ao tentar atualizar a empresa.`,
+              description: `Falha ao tentar atualizar o módulo.`,
             });
           });
       } else {
-        const data: CompanyData = {
+        const data: ModuleData = {
           name: values.name,
-          modules: values.modules?.map(module => ({ id: module })),
         };
 
-        addCompany(data)
+        addModule(data)
           .then(result => {
             addToast({
               title: 'Sucesso',
               type: 'success',
-              description: `Empresa ${result.data.name} adicionada.`,
+              description: `Módulo ${result.data.name} adicionado.`,
             });
             history.push(HISTORY_BACK);
           })
@@ -107,7 +90,7 @@ export const Form: React.FC = () => {
             addToast({
               title: 'Falha',
               type: 'error',
-              description: `Falha ao tentar adicionar a empresa.`,
+              description: `Falha ao tentar adicionar o módulo.`,
             });
           });
       }
@@ -127,27 +110,11 @@ export const Form: React.FC = () => {
             register={register}
           />
         </FormGroup>
-        <FormGroup>
-          <Modules>
-            {modules &&
-              modules.map(module => (
-                <div key={module.id}>
-                  <Checkbox
-                    label={module.name}
-                    id={module.name}
-                    name="modules[]"
-                    value={module.id}
-                    register={register}
-                  />
-                </div>
-              ))}
-          </Modules>
-        </FormGroup>
 
         <ButtonGroup between>
           <Button tipo="back" onClick={() => history.push(HISTORY_BACK)} />
           <div className="right">
-            <Button tipo="cancel" onClick={() => handleGetCompany(id)} />
+            <Button tipo="cancel" onClick={() => handleGetModule(id)} />
             <Button tipo="save" />
           </div>
         </ButtonGroup>

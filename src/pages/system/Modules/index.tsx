@@ -6,7 +6,6 @@ import { Button } from '../../../components/Form/Button';
 import { ButtonGroup } from '../../../components/Form/ButtonGroup';
 import { Filter } from '../../../components/Form/Filter';
 import Input from '../../../components/Form/Input';
-import Select from '../../../components/Form/Select';
 import { Table } from '../../../components/Table';
 import { Th } from '../../../components/Table/Th';
 import { Tr } from '../../../components/Table/Tr';
@@ -15,29 +14,25 @@ import { THead } from '../../../components/Table/THead';
 import { TBody } from '../../../components/Table/TBody';
 import { useTitle } from '../../../hooks/title';
 import { useToast } from '../../../hooks/toast';
-import { getModules, Module } from '../../../services/system/module.service';
-import {
-  delRole,
-  FilterRole,
-  getRoles,
-  Role,
-  updateOrder,
-} from '../../../services/system/role.service';
-import { debounce } from '../../../utils/debounce';
 import { Container } from './styles';
 import { Pagination } from '../../../components/Form/Pagination';
 import { useAuth } from '../../../hooks/auth';
 import { Modal } from '../../../components/Modal';
+import {
+  delModule,
+  FilterModule,
+  getModules,
+  Module,
+} from '../../../services/system/module.service';
 
-export const Roles: React.FC = () => {
+export const Modules: React.FC = () => {
   const { setTitle } = useTitle();
-  const [roles, setRoles] = useState<Role[]>([]);
   const [modules, setModules] = useState<Module[]>([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [filter, setFilter] = useState({
     params: {},
-  } as FilterRole);
+  } as FilterModule);
 
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -49,21 +44,17 @@ export const Roles: React.FC = () => {
   const { addToast } = useToast();
   const history = useHistory();
 
-  useEffect(() => setTitle('Regras'), [setTitle]);
+  useEffect(() => setTitle('Módulos'), [setTitle]);
 
-  useEffect(() => {
-    getModules().then(result => setModules(result.data.data));
-  }, []);
-
-  const handleGetRoles = useCallback(() => {
+  const handleGetModules = useCallback(() => {
     if (order && by) {
       filter.params.order = { field: order, order: by };
     }
     filter.params.page = page;
 
-    getRoles(filter)
+    getModules(filter)
       .then(result => {
-        setRoles(result.data.data);
+        setModules(result.data.data);
         setTotal(result.data.total);
       })
       .catch(() => {
@@ -74,40 +65,35 @@ export const Roles: React.FC = () => {
         });
       });
   }, [addToast, by, filter, order, page]);
-  useEffect(() => handleGetRoles(), [handleGetRoles]);
+  useEffect(() => handleGetModules(), [handleGetModules]);
 
   const onFilter = useCallback(data => {
-    const newFilter = { params: {} } as FilterRole;
-    if (data.search) newFilter.params.search = data.search;
-    if (data.moduleId) newFilter.params.moduleId = data.moduleId;
+    const newFilter = { params: {} } as FilterModule;
+    if (data.name) newFilter.params.name = data.name;
 
     setFilter(newFilter);
   }, []);
 
   const clearFilter = useCallback(() => {
     reset();
-    setFilter({ params: {} } as FilterRole);
+    setFilter({ params: {} } as FilterModule);
   }, [reset]);
 
-  const handleOrder = useCallback((id: string, orderNumber: number) => {
-    debounce(() => updateOrder(id, orderNumber));
-  }, []);
-
-  const noAlter = useMemo(() => !hasRole('ADMINROLE_ALTER'), [hasRole]);
+  const noAlter = useMemo(() => !hasRole('ADMINMODULE_ALTER'), [hasRole]);
 
   const handleDelete = useCallback(
     (id: string) => {
-      delRole(id).then(() => {
+      delModule(id).then(() => {
         addToast({
           title: 'Registro excluído',
           description: 'Registro excluído com sucesso.',
           type: 'success',
         });
         if (page > 1) setPage(1);
-        else handleGetRoles();
+        else handleGetModules();
       });
     },
-    [addToast, page, handleGetRoles],
+    [addToast, page, handleGetModules],
   );
 
   return (
@@ -115,30 +101,16 @@ export const Roles: React.FC = () => {
       <Filter clearFilters={clearFilter} onSubmit={handleSubmit(onFilter)}>
         <Input
           width="col-12 col-sm-5 col-md-3"
-          label="Palavra chave"
-          name="search"
+          label="Nome"
+          name="name"
           register={register}
         />
-        <Select
-          width="col-12 col-sm-9 col-md-3"
-          label="Módulo"
-          name="moduleId"
-          register={register}
-        >
-          <option value="">Todos</option>
-          {modules &&
-            modules.map(module => (
-              <option key={module.id} value={module.id}>
-                {module.name}
-              </option>
-            ))}
-        </Select>
       </Filter>
       <ButtonGroup>
         <Button
           className="btn btn-outline-primary"
           title="Adicionar Registro"
-          onClick={() => history.push('/webeditor/regras/form')}
+          onClick={() => history.push('/webeditor/modulos/form')}
           disabled={noAlter}
         >
           <FaPlus /> Nova Registro
@@ -149,29 +121,13 @@ export const Roles: React.FC = () => {
         <Table>
           <THead>
             <Th orderBy="name">Nome</Th>
-            <Th orderBy="label">Legenda</Th>
-            <Th orderBy="module.name">Módulo</Th>
-            <Th orderBy="order">Ordem</Th>
             <Th align="flex-end">Ações</Th>
           </THead>
-          {roles && (
+          {modules && (
             <TBody>
-              {roles.map(role => (
-                <Tr key={role.id}>
-                  <Td>{role.name}</Td>
-                  <Td>{role.label}</Td>
-                  <Td>{role.module.name}</Td>
-                  <Td>
-                    <input
-                      type="number"
-                      name="ordem"
-                      disabled={noAlter}
-                      defaultValue={role.order}
-                      onChange={e =>
-                        handleOrder(role.id, +e.currentTarget.value)
-                      }
-                    />
-                  </Td>
+              {modules.map(module => (
+                <Tr key={module.id}>
+                  <Td>{module.name}</Td>
                   <Td>
                     <ButtonGroup>
                       <Button
@@ -179,24 +135,24 @@ export const Roles: React.FC = () => {
                         disabled={noAlter}
                         title="Editar Regitro"
                         onClick={() =>
-                          history.push(`/webeditor/regras/form/${role.id}`)
+                          history.push(`/webeditor/modulos/form/${module.id}`)
                         }
                       >
                         <FaPencilAlt />
                       </Button>
                       <Modal
-                        disabled={!hasRole('ADMINROLE_DELETE')}
+                        disabled={!hasRole('ADMINMODULE_DELETE')}
                         title="Atenção!"
                         button={
                           <Button
                             className="btn btn-outline-danger"
-                            disabled={!hasRole('ADMINROLE_DELETE')}
+                            disabled={!hasRole('ADMINMODULE_DELETE')}
                             title="Excluir Registro"
                           >
                             <FaTrashAlt />
                           </Button>
                         }
-                        confirm={() => handleDelete(role.id)}
+                        confirm={() => handleDelete(module.id)}
                       >
                         Deseja realmente excluir o registro?
                       </Modal>

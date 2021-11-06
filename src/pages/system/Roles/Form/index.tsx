@@ -39,7 +39,7 @@ export const Form: React.FC = () => {
 
   useEffect(() => {
     getModules().then(result => {
-      setModules(result.data);
+      setModules(result.data.data);
     });
   }, []);
 

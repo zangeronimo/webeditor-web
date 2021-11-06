@@ -2,15 +2,17 @@ import React from 'react';
 import { Switch } from 'react-router-dom';
 import { Denied } from '../pages/system/401';
 import { Dashboard } from '../pages/system/Dashboard';
-import { Roles } from '../pages/system/Roles';
 import { SignIn } from '../pages/system/SignIn';
 import { Users } from '../pages/system/Users';
 import { Form as UserForm } from '../pages/system/Users/Form';
+import { Roles } from '../pages/system/Roles';
 import { Form as RoleForm } from '../pages/system/Roles/Form';
+import { Companies } from '../pages/system/Companies';
 import { Form as CompanyForm } from '../pages/system/Companies/Form';
+import { Modules } from '../pages/system/Modules';
+import { Form as ModuleForm } from '../pages/system/Modules/Form';
 
 import Route from './Route';
-import { Companies } from '../pages/system/Companies';
 
 const Routes: React.FC = () => (
   <Switch>
@@ -58,6 +60,20 @@ const Routes: React.FC = () => (
       component={CompanyForm}
       isPrivate
       role="ADMINCOMPANY_ALTER"
+    />
+
+    <Route
+      path="/webeditor/modulos"
+      exact
+      component={Modules}
+      isPrivate
+      role="ADMINMODULE_VIEW"
+    />
+    <Route
+      path="/webeditor/modulos/form/:id?"
+      component={ModuleForm}
+      isPrivate
+      role="ADMINMODULE_ALTER"
     />
   </Switch>
 );
