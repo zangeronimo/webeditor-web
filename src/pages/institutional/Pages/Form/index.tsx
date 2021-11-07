@@ -1,32 +1,23 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button } from '../../../../components/Form/Button';
 import { ButtonGroup } from '../../../../components/Form/ButtonGroup';
-import Checkbox from '../../../../components/Form/Checkbox';
 import Input from '../../../../components/Form/Input';
 import { useTitle } from '../../../../hooks/title';
 import { useToast } from '../../../../hooks/toast';
 import {
-  getModulesByUser,
-  Module,
-} from '../../../../services/system/module.service';
-import {
-  addUser,
-  getUserById,
-  updateUser,
-  User,
-  UserData,
-} from '../../../../services/system/user.service';
+  addPage,
+  getPageById,
+  PageData,
+  updatePage,
+} from '../../../../services/institutional/page.service';
 
-import { Container, Roles } from './styles';
+import { Container } from './styles';
 
-const HISTORY_BACK = '/webeditor/usuarios';
+const HISTORY_BACK = '/institucional/paginas';
 
 export const Form: React.FC = () => {
-  const [user, setUser] = useState({} as User);
-  const [modules, setModules] = useState<Module[]>([]);
-
   const { addToast } = useToast();
   const history = useHistory();
 
@@ -40,52 +31,37 @@ export const Form: React.FC = () => {
     formState: { errors },
   } = useForm();
 
-  const handleGetUser = useCallback(
-    (userId: string) => {
-      getUserById(userId).then(result => {
+  const handleGetPage = useCallback(
+    (pageId: string) => {
+      getPageById(pageId).then(result => {
         const { data } = result;
-        setValue('name', data.name);
-        setValue('email', data.email);
-        setUser(result.data);
+        setValue('title', data.title);
+        setValue('active', data.active);
       });
     },
     [setValue],
   );
 
-  useEffect(() => handleGetUser(id), [handleGetUser, id]);
+  useEffect(() => handleGetPage(id), [handleGetPage, id]);
 
-  useEffect(() => {
-    getModulesByUser().then(result => {
-      const roles = user.roles?.map(role => role.id);
-      setValue('roles', roles);
-      setModules(result.data);
-    });
-  }, [setValue, user]);
-
-  useEffect(() => setTitle('Usuários / Formulário'), [setTitle]);
+  useEffect(() => setTitle('Páginas / Formulário'), [setTitle]);
 
   const onSubmit = useCallback(
-    (values: {
-      name: string;
-      email: string;
-      password: string;
-      roles: string[];
-    }) => {
+    (values: { title: string; active: number }) => {
       if (id) {
-        const data: UserData = {
+        const data: PageData = {
           id,
-          name: values.name,
-          email: values.email,
-          password: values.password,
-          roles: values.roles?.map(role => ({ id: role })),
+          title: values.title,
+          content: '<h1>oi</h1>',
+          active: values.active,
         };
 
-        updateUser(id, data)
+        updatePage(id, data)
           .then(result => {
             addToast({
               title: 'Sucesso',
               type: 'success',
-              description: `Usuário ${result.data.name} atualizado.`,
+              description: `Página ${result.data.title} atualizada.`,
             });
             history.push(HISTORY_BACK);
           })
@@ -93,23 +69,21 @@ export const Form: React.FC = () => {
             addToast({
               title: 'Falha',
               type: 'error',
-              description: `Falha ao tentar atualizar o usuário.`,
+              description: `Falha ao tentar atualizar a página.`,
             });
           });
       } else {
-        const data: UserData = {
-          name: values.name,
-          email: values.email,
-          password: values.password,
-          roles: values.roles?.map(role => ({ id: role })),
+        const data: PageData = {
+          title: values.title,
+          content: '<h1>oi</h1>',
         };
 
-        addUser(data)
+        addPage(data)
           .then(result => {
             addToast({
               title: 'Sucesso',
               type: 'success',
-              description: `Usuário ${result.data.name} adicionado.`,
+              description: `Página ${result.data.title} adicionada.`,
             });
             history.push(HISTORY_BACK);
           })
@@ -117,7 +91,7 @@ export const Form: React.FC = () => {
             addToast({
               title: 'Falha',
               type: 'error',
-              description: `Falha ao tentar adicionar o usuário.`,
+              description: `Falha ao tentar adicionar a página.`,
             });
           });
       }
@@ -129,49 +103,22 @@ export const Form: React.FC = () => {
     <Container>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input
-          label="Nome"
-          name="name"
-          error={errors.name?.message}
+          label="Title"
+          name="title"
+          error={errors.title?.message}
           register={register}
         />
         <Input
-          label="E-mail"
-          name="email"
-          error={errors.email?.message}
+          type="number"
+          label="Active"
+          name="active"
+          error={errors.active?.message}
           register={register}
         />
-        <Input
-          label="Senha"
-          type="password"
-          name="password"
-          register={register}
-        />
-        <div>
-          {modules &&
-            modules.map(module => (
-              <div key={module.id}>
-                <h2>{module.name}</h2>
-                <Roles>
-                  {module.roles &&
-                    module.roles.map(role => (
-                      <div className="col-4" key={role.id}>
-                        <Checkbox
-                          label={role.label}
-                          id={role.name}
-                          name="roles[]"
-                          value={role.id}
-                          register={register}
-                        />
-                      </div>
-                    ))}
-                </Roles>
-              </div>
-            ))}
-        </div>
         <ButtonGroup between>
           <Button tipo="back" onClick={() => history.push(HISTORY_BACK)} />
           <div className="right">
-            <Button tipo="cancel" onClick={() => handleGetUser(id)} />
+            <Button tipo="cancel" onClick={() => handleGetPage(id)} />
             <Button tipo="save" />
           </div>
         </ButtonGroup>

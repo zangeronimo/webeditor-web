@@ -18,19 +18,19 @@ import { useAuth } from '../../../hooks/auth';
 import { useTitle } from '../../../hooks/title';
 import { useToast } from '../../../hooks/toast';
 import {
-  delUser,
-  FilterUser,
-  getUser,
-  User,
-} from '../../../services/system/user.service';
+  delPage,
+  FilterPage,
+  getPage,
+  Page,
+} from '../../../services/institutional/page.service';
 import { Container } from './styles';
 
 export const Pages: React.FC = () => {
   const { setTitle } = useTitle();
-  const [users, setUsers] = useState<User[]>([]);
+  const [pages, setPages] = useState<Page[]>([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const [filter, setFilter] = useState({ params: {} } as FilterUser);
+  const [filter, setFilter] = useState({ params: {} } as FilterPage);
 
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -42,17 +42,17 @@ export const Pages: React.FC = () => {
   const { addToast } = useToast();
   const history = useHistory();
 
-  useEffect(() => setTitle('Usuários'), [setTitle]);
+  useEffect(() => setTitle('Páginas'), [setTitle]);
 
-  const handleGetUsers = useCallback(() => {
+  const handleGetPages = useCallback(() => {
     if (order && by) {
       filter.params.order = { field: order, order: by };
     }
     filter.params.page = page;
 
-    getUser(filter)
+    getPage(filter)
       .then(result => {
-        setUsers(result.data.data);
+        setPages(result.data.data);
         setTotal(result.data.total);
       })
       .catch(() => {
@@ -63,36 +63,38 @@ export const Pages: React.FC = () => {
         });
       });
   }, [addToast, by, filter, order, page]);
-  useEffect(() => handleGetUsers(), [handleGetUsers]);
+  useEffect(() => handleGetPages(), [handleGetPages]);
 
   const onFilter = useCallback(data => {
-    const newFilter = { params: {} } as FilterUser;
-    if (data.name) newFilter.params.name = data.name;
-    if (data.email) newFilter.params.email = data.email;
+    const newFilter = { params: {} } as FilterPage;
+    if (data.title) newFilter.params.title = data.title;
 
     setFilter(newFilter);
   }, []);
 
   const clearFilter = useCallback(() => {
     reset();
-    setFilter({ params: {} } as FilterUser);
+    setFilter({ params: {} } as FilterPage);
   }, [reset]);
 
-  const noAlter = useMemo(() => !hasRole('WEBEDITORUSER_ALTER'), [hasRole]);
+  const noAlter = useMemo(
+    () => !hasRole('INSTITUTIONALPAGES_ALTER'),
+    [hasRole],
+  );
 
   const handleDelete = useCallback(
     (id: string) => {
-      delUser(id).then(() => {
+      delPage(id).then(() => {
         addToast({
           title: 'Registro excluído',
           description: 'Registro excluído com sucesso.',
           type: 'success',
         });
         if (page > 1) setPage(1);
-        else handleGetUsers();
+        else handleGetPages();
       });
     },
-    [addToast, page, handleGetUsers],
+    [addToast, page, handleGetPages],
   );
 
   return (
@@ -100,14 +102,8 @@ export const Pages: React.FC = () => {
       <Filter clearFilters={clearFilter} onSubmit={handleSubmit(onFilter)}>
         <Input
           width="col-12 col-sm-5 col-md-3"
-          label="Nome"
-          name="name"
-          register={register}
-        />
-        <Input
-          width="col-12 col-sm-5 col-md-3"
-          label="E-mail"
-          name="email"
+          label="Title"
+          name="title"
           register={register}
         />
       </Filter>
@@ -115,7 +111,7 @@ export const Pages: React.FC = () => {
         <Button
           className="btn btn-outline-primary"
           title="Adicionar Registro"
-          onClick={() => history.push('/webeditor/usuarios/form')}
+          onClick={() => history.push('/institucional/paginas/form')}
           disabled={noAlter}
         >
           <FaPlus /> Novo Registro
@@ -125,18 +121,16 @@ export const Pages: React.FC = () => {
       <div className="table-responsive">
         <Table>
           <THead>
-            <Th orderBy="name">Nome</Th>
-            <Th orderBy="email">E-mail</Th>
+            <Th orderBy="title">Título</Th>
             <Th>Empresa</Th>
             <Th align="flex-end">Ações</Th>
           </THead>
-          {users && (
+          {pages && (
             <TBody>
-              {users.map(user => (
-                <Tr key={user.id}>
-                  <Td>{user.name}</Td>
-                  <Td>{user.email}</Td>
-                  <Td>{user.company?.name}</Td>
+              {pages.map(data => (
+                <Tr key={data.id}>
+                  <Td>{data.title}</Td>
+                  <Td>{data.company?.name}</Td>
                   <Td>
                     <ButtonGroup>
                       <Button
@@ -144,24 +138,24 @@ export const Pages: React.FC = () => {
                         disabled={noAlter}
                         title="Editar Regitro"
                         onClick={() =>
-                          history.push(`/webeditor/usuarios/form/${user.id}`)
+                          history.push(`/institucional/paginas/form/${data.id}`)
                         }
                       >
                         <FaPencilAlt />
                       </Button>
                       <Modal
-                        disabled={!hasRole('WEBEDITORUSER_DELETE')}
+                        disabled={!hasRole('INSTITUTIONALPAGES_DELETE')}
                         title="Atenção!"
                         button={
                           <Button
                             className="btn btn-outline-danger"
-                            disabled={!hasRole('WEBEDITORUSER_DELETE')}
+                            disabled={!hasRole('INSTITUTIONALPAGES_DELETE')}
                             title="Excluir Registro"
                           >
                             <FaTrashAlt />
                           </Button>
                         }
-                        confirm={() => handleDelete(user.id)}
+                        confirm={() => handleDelete(data.id)}
                       >
                         Deseja realmente excluir o registro?
                       </Modal>
