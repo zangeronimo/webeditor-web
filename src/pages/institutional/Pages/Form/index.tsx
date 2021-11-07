@@ -1,9 +1,6 @@
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
-
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import { Button } from '../../../../components/Form/Button';
 import { ButtonGroup } from '../../../../components/Form/ButtonGroup';
@@ -18,6 +15,9 @@ import {
 } from '../../../../services/institutional/page.service';
 
 import { Container } from './styles';
+import Select from '../../../../components/Form/Select';
+import { FormGroup } from '../../../../components/Form/FormGroup';
+import { Editor } from '../../../../components/Form/Editor';
 
 const HISTORY_BACK = '/institucional/paginas';
 
@@ -108,26 +108,28 @@ export const Form: React.FC = () => {
   return (
     <Container>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          label="Title"
-          name="title"
-          error={errors.title?.message}
-          register={register}
-        />
-        <CKEditor
-          editor={ClassicEditor}
-          data={content}
-          onChange={(event: FormEvent, editor: any) => {
-            setContent(editor.getData());
-          }}
-        />
-        <Input
-          type="number"
-          label="Active"
-          name="active"
-          error={errors.active?.message}
-          register={register}
-        />
+        <FormGroup>
+          <Input
+            width="col-12 col-md-9"
+            label="Título"
+            name="title"
+            error={errors.title?.message}
+            register={register}
+          />
+          <Select
+            width="col-12 col-md-2"
+            label="Ativo"
+            name="active"
+            error={errors.active?.message}
+            register={register}
+          >
+            <option value={1}>Sim</option>
+            <option value={0}>Não</option>
+          </Select>
+        </FormGroup>
+
+        <Editor data={content} setContent={setContent} />
+
         <ButtonGroup between>
           <Button tipo="back" onClick={() => history.push(HISTORY_BACK)} />
           <div className="right">
