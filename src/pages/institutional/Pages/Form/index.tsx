@@ -1,6 +1,10 @@
-import { useCallback, useEffect } from 'react';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
+
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 import { Button } from '../../../../components/Form/Button';
 import { ButtonGroup } from '../../../../components/Form/ButtonGroup';
 import Input from '../../../../components/Form/Input';
@@ -18,6 +22,7 @@ import { Container } from './styles';
 const HISTORY_BACK = '/institucional/paginas';
 
 export const Form: React.FC = () => {
+  const [content, setContent] = useState('');
   const { addToast } = useToast();
   const history = useHistory();
 
@@ -37,6 +42,7 @@ export const Form: React.FC = () => {
         const { data } = result;
         setValue('title', data.title);
         setValue('active', data.active);
+        setContent(data.content);
       });
     },
     [setValue],
@@ -52,7 +58,7 @@ export const Form: React.FC = () => {
         const data: PageData = {
           id,
           title: values.title,
-          content: '<h1>oi</h1>',
+          content,
           active: values.active,
         };
 
@@ -75,7 +81,7 @@ export const Form: React.FC = () => {
       } else {
         const data: PageData = {
           title: values.title,
-          content: '<h1>oi</h1>',
+          content,
         };
 
         addPage(data)
@@ -96,7 +102,7 @@ export const Form: React.FC = () => {
           });
       }
     },
-    [addToast, history, id],
+    [addToast, content, history, id],
   );
 
   return (
@@ -107,6 +113,13 @@ export const Form: React.FC = () => {
           name="title"
           error={errors.title?.message}
           register={register}
+        />
+        <CKEditor
+          editor={ClassicEditor}
+          data={content}
+          onChange={(event: FormEvent, editor: any) => {
+            setContent(editor.getData());
+          }}
         />
         <Input
           type="number"
