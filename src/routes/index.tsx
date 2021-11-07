@@ -11,6 +11,8 @@ import { Companies } from '../pages/system/Companies';
 import { Form as CompanyForm } from '../pages/system/Companies/Form';
 import { Modules } from '../pages/system/Modules';
 import { Form as ModuleForm } from '../pages/system/Modules/Form';
+import { Pages } from '../pages/institutional/Pages';
+import { Form as PageForm } from '../pages/institutional/Pages/Form';
 
 import Route from './Route';
 
@@ -19,6 +21,20 @@ const Routes: React.FC = () => (
     <Route path="/" exact component={SignIn} />
     <Route path="/dashboard" component={Dashboard} isPrivate />
     <Route path="/401" component={Denied} isPrivate />
+
+    <Route
+      path="/institucional/paginas"
+      exact
+      component={Pages}
+      isPrivate
+      role="INSTITUTIONALPAGES_VIEW"
+    />
+    <Route
+      path="/institucional/paginas/form/:id?"
+      component={PageForm}
+      isPrivate
+      role="INSTITUTIONALPAGES_ALTER"
+    />
 
     <Route
       path="/webeditor/usuarios"

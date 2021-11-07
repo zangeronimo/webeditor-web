@@ -23,7 +23,7 @@ export const Sidebar: React.FC = () => {
           <h2 data-bs-toggle="offcanvas">Dashboard</h2>
         </Link>
 
-        {hasOneRole(['INSTITUTIONALPAGE_VIEW']) && (
+        {hasOneRole(['INSTITUTIONALPAGES_VIEW']) && (
           <h2
             data-bs-toggle="collapse"
             data-bs-target="#collapseINSTITUTIONAL"
@@ -34,7 +34,7 @@ export const Sidebar: React.FC = () => {
         )}
         <div className="collapse" id="collapseINSTITUTIONAL">
           <ul>
-            {hasRole('INSTITUTIONALPAGE_VIEW') && (
+            {hasRole('INSTITUTIONALPAGES_VIEW') && (
               <li>
                 <Link to="/institucional/paginas">
                   <span data-bs-toggle="offcanvas">Páginas</span>
