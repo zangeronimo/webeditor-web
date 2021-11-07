@@ -4,6 +4,7 @@ import { BaseFilter, PaginationResult } from '../BaseTypes';
 
 export type Page = {
   id: string;
+  banner: string;
   title: string;
   content: string;
   active: number;
@@ -15,6 +16,7 @@ export type Page = {
 
 export type PageData = {
   id?: string;
+  file?: string;
   title: string;
   content: string;
   active?: number;

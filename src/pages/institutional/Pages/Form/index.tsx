@@ -18,11 +18,14 @@ import { Container } from './styles';
 import Select from '../../../../components/Form/Select';
 import { FormGroup } from '../../../../components/Form/FormGroup';
 import { Editor } from '../../../../components/Form/Editor';
+import { file2Base64 } from '../../../../utils/file2Base64';
 
 const HISTORY_BACK = '/institucional/paginas';
 
 export const Form: React.FC = () => {
   const [content, setContent] = useState('');
+  const [banner, setBanner] = useState('');
+
   const { addToast } = useToast();
   const history = useHistory();
 
@@ -43,6 +46,7 @@ export const Form: React.FC = () => {
         setValue('title', data.title);
         setValue('active', data.active);
         setContent(data.content);
+        setBanner(data.banner);
       });
     },
     [setValue],
@@ -53,7 +57,7 @@ export const Form: React.FC = () => {
   useEffect(() => setTitle('Páginas / Formulário'), [setTitle]);
 
   const onSubmit = useCallback(
-    (values: { title: string; active: number }) => {
+    async (values: { banner: string; title: string; active: number }) => {
       if (id) {
         const data: PageData = {
           id,
@@ -61,6 +65,10 @@ export const Form: React.FC = () => {
           content,
           active: values.active,
         };
+
+        if (values.banner) {
+          data.file = await file2Base64(values.banner[0]);
+        }
 
         updatePage(id, data)
           .then(result => {
@@ -83,6 +91,10 @@ export const Form: React.FC = () => {
           title: values.title,
           content,
         };
+
+        if (values.banner) {
+          data.file = await file2Base64(values.banner[0]);
+        }
 
         addPage(data)
           .then(result => {
@@ -126,6 +138,20 @@ export const Form: React.FC = () => {
             <option value={1}>Sim</option>
             <option value={0}>Não</option>
           </Select>
+          <Input
+            type="file"
+            width="col-12 col-md-9"
+            label="Banner"
+            name="banner"
+            error={errors.banner?.message}
+            register={register}
+          />
+          {banner && (
+            <img
+              src={`${process.env.REACT_APP_APIURL}${banner}`}
+              alt="banner"
+            />
+          )}
         </FormGroup>
 
         <Editor data={content} setContent={setContent} />
