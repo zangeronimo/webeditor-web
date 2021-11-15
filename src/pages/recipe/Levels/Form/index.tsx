@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -7,25 +7,21 @@ import { ButtonGroup } from '../../../../components/Form/ButtonGroup';
 import Input from '../../../../components/Form/Input';
 import { useTitle } from '../../../../hooks/title';
 import { useToast } from '../../../../hooks/toast';
-import {
-  addPage,
-  getPageById,
-  PageData,
-  updatePage,
-} from '../../../../services/institutional/page.service';
 
-import { Container } from './styles';
 import Select from '../../../../components/Form/Select';
 import { FormGroup } from '../../../../components/Form/FormGroup';
-import { Editor } from '../../../../components/Form/Editor';
-import { file2Base64 } from '../../../../utils/file2Base64';
 
-const HISTORY_BACK = '/institucional/paginas';
+import { Container } from './styles';
+import {
+  addLevel,
+  getLevelById,
+  LevelData,
+  updateLevel,
+} from '../../../../services/recipe/level.service';
+
+const HISTORY_BACK = '/culinaria/niveis';
 
 export const Form: React.FC = () => {
-  const [content, setContent] = useState('');
-  const [banner, setBanner] = useState('');
-
   const { addToast } = useToast();
   const history = useHistory();
 
@@ -39,45 +35,38 @@ export const Form: React.FC = () => {
     formState: { errors },
   } = useForm();
 
-  const handleGetPage = useCallback(
-    (pageId: string) => {
-      if (pageId) {
-        getPageById(pageId).then(result => {
+  const handleGetLevel = useCallback(
+    (levelId: string) => {
+      if (levelId) {
+        getLevelById(levelId).then(result => {
           const { data } = result;
-          setValue('title', data.title);
+          setValue('name', data.name);
           setValue('active', data.active);
-          setContent(data.content);
-          setBanner(data.banner);
         });
       }
     },
     [setValue],
   );
 
-  useEffect(() => handleGetPage(id), [handleGetPage, id]);
+  useEffect(() => handleGetLevel(id), [handleGetLevel, id]);
 
-  useEffect(() => setTitle('Páginas / Formulário'), [setTitle]);
+  useEffect(() => setTitle('Níveis / Formulário'), [setTitle]);
 
   const onSubmit = useCallback(
-    async (values: { banner: string; title: string; active: number }) => {
+    async (values: { name: string; active: 0 | 1 }) => {
       if (id) {
-        const data: PageData = {
+        const data: LevelData = {
           id,
-          title: values.title,
-          content,
+          name: values.name,
           active: values.active,
         };
 
-        if (values.banner) {
-          data.file = await file2Base64(values.banner[0]);
-        }
-
-        updatePage(id, data)
+        updateLevel(id, data)
           .then(result => {
             addToast({
               title: 'Sucesso',
               type: 'success',
-              description: `Página ${result.data.title} atualizada.`,
+              description: `Nível ${result.data.name} atualizado.`,
             });
             history.push(HISTORY_BACK);
           })
@@ -85,25 +74,20 @@ export const Form: React.FC = () => {
             addToast({
               title: 'Falha',
               type: 'error',
-              description: `Falha ao tentar atualizar a página.`,
+              description: `Falha ao tentar atualizar o nível.`,
             });
           });
       } else {
-        const data: PageData = {
-          title: values.title,
-          content,
+        const data: LevelData = {
+          name: values.name,
         };
 
-        if (values.banner) {
-          data.file = await file2Base64(values.banner[0]);
-        }
-
-        addPage(data)
+        addLevel(data)
           .then(result => {
             addToast({
               title: 'Sucesso',
               type: 'success',
-              description: `Página ${result.data.title} adicionada.`,
+              description: `Nível ${result.data.name} adicionado.`,
             });
             history.push(HISTORY_BACK);
           })
@@ -111,12 +95,12 @@ export const Form: React.FC = () => {
             addToast({
               title: 'Falha',
               type: 'error',
-              description: `Falha ao tentar adicionar a página.`,
+              description: `Falha ao tentar adicionar o nível.`,
             });
           });
       }
     },
-    [addToast, content, history, id],
+    [addToast, history, id],
   );
 
   return (
@@ -125,9 +109,9 @@ export const Form: React.FC = () => {
         <FormGroup>
           <Input
             width="col-12 col-md-9"
-            label="Título"
-            name="title"
-            error={errors.title?.message}
+            label="Nome"
+            name="name"
+            error={errors.name?.message}
             register={register}
           />
           <Select
@@ -140,28 +124,12 @@ export const Form: React.FC = () => {
             <option value={1}>Sim</option>
             <option value={0}>Não</option>
           </Select>
-          <Input
-            type="file"
-            width="col-12 col-md-9"
-            label="Banner"
-            name="banner"
-            error={errors.banner?.message}
-            register={register}
-          />
-          {banner && (
-            <img
-              src={`${process.env.REACT_APP_APIURL}${banner}`}
-              alt="banner"
-            />
-          )}
         </FormGroup>
-
-        <Editor data={content} setContent={setContent} />
 
         <ButtonGroup between>
           <Button tipo="back" onClick={() => history.push(HISTORY_BACK)} />
           <div className="right">
-            <Button tipo="cancel" onClick={() => handleGetPage(id)} />
+            <Button tipo="cancel" onClick={() => handleGetLevel(id)} />
             <Button tipo="save" />
           </div>
         </ButtonGroup>

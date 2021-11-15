@@ -7,6 +7,7 @@ import { ButtonGroup } from '../../../components/Form/ButtonGroup';
 import { Filter } from '../../../components/Form/Filter';
 import Input from '../../../components/Form/Input';
 import { Pagination } from '../../../components/Form/Pagination';
+import Select from '../../../components/Form/Select';
 import { Modal } from '../../../components/Modal';
 import { Table } from '../../../components/Table';
 import { TBody } from '../../../components/Table/TBody';
@@ -18,19 +19,19 @@ import { useAuth } from '../../../hooks/auth';
 import { useTitle } from '../../../hooks/title';
 import { useToast } from '../../../hooks/toast';
 import {
-  delPage,
-  FilterPage,
-  getPage,
-  Page,
-} from '../../../services/institutional/page.service';
+  delLevel,
+  FilterLevel,
+  getLevel,
+  Level,
+} from '../../../services/recipe/level.service';
 import { Container } from './styles';
 
-export const Pages: React.FC = () => {
+export const Levels: React.FC = () => {
   const { setTitle } = useTitle();
-  const [pages, setPages] = useState<Page[]>([]);
+  const [levels, setLevels] = useState<Level[]>([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const [filter, setFilter] = useState({ params: {} } as FilterPage);
+  const [filter, setFilter] = useState({ params: {} } as FilterLevel);
 
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -42,17 +43,17 @@ export const Pages: React.FC = () => {
   const { addToast } = useToast();
   const history = useHistory();
 
-  useEffect(() => setTitle('Páginas'), [setTitle]);
+  useEffect(() => setTitle('Níveis'), [setTitle]);
 
-  const handleGetPages = useCallback(() => {
+  const handleGetLevels = useCallback(() => {
     if (order && by) {
       filter.params.order = { field: order, order: by };
     }
     filter.params.page = page;
 
-    getPage(filter)
+    getLevel(filter)
       .then(result => {
-        setPages(result.data.data);
+        setLevels(result.data.data);
         setTotal(result.data.total);
       })
       .catch(() => {
@@ -63,38 +64,36 @@ export const Pages: React.FC = () => {
         });
       });
   }, [addToast, by, filter, order, page]);
-  useEffect(() => handleGetPages(), [handleGetPages]);
+  useEffect(() => handleGetLevels(), [handleGetLevels]);
 
   const onFilter = useCallback(data => {
-    const newFilter = { params: {} } as FilterPage;
-    if (data.title) newFilter.params.title = data.title;
+    const newFilter = { params: {} } as FilterLevel;
+    if (data.name) newFilter.params.name = data.name;
+    if (data.active) newFilter.params.active = data.active;
 
     setFilter(newFilter);
   }, []);
 
   const clearFilter = useCallback(() => {
     reset();
-    setFilter({ params: {} } as FilterPage);
+    setFilter({ params: {} } as FilterLevel);
   }, [reset]);
 
-  const noAlter = useMemo(
-    () => !hasRole('INSTITUTIONALPAGES_ALTER'),
-    [hasRole],
-  );
+  const noAlter = useMemo(() => !hasRole('RECIPELEVELS_ALTER'), [hasRole]);
 
   const handleDelete = useCallback(
     (id: string) => {
-      delPage(id).then(() => {
+      delLevel(id).then(() => {
         addToast({
           title: 'Registro excluído',
           description: 'Registro excluído com sucesso.',
           type: 'success',
         });
         if (page > 1) setPage(1);
-        else handleGetPages();
+        else handleGetLevels();
       });
     },
-    [addToast, page, handleGetPages],
+    [addToast, page, handleGetLevels],
   );
 
   return (
@@ -102,16 +101,26 @@ export const Pages: React.FC = () => {
       <Filter clearFilters={clearFilter} onSubmit={handleSubmit(onFilter)}>
         <Input
           width="col-12 col-sm-5 col-md-3"
-          label="Título"
-          name="title"
+          label="Nome"
+          name="name"
           register={register}
         />
+        <Select
+          width="col-12 col-sm-5 col-md-2"
+          label="Ativo"
+          name="active"
+          register={register}
+        >
+          <option value="">Todos</option>
+          <option value="1">Sim</option>
+          <option value="0">Não</option>
+        </Select>
       </Filter>
       <ButtonGroup>
         <Button
           className="btn btn-outline-primary"
           title="Adicionar Registro"
-          onClick={() => history.push('/institucional/paginas/form')}
+          onClick={() => history.push('/culinaria/niveis/form')}
           disabled={noAlter}
         >
           <FaPlus /> Novo Registro
@@ -123,14 +132,16 @@ export const Pages: React.FC = () => {
           <THead>
             <Th orderBy="title">Título</Th>
             <Th>Empresa</Th>
+            <Th orderBy="active">Ativo</Th>
             <Th align="flex-end">Ações</Th>
           </THead>
-          {pages && (
+          {levels && (
             <TBody>
-              {pages.map(data => (
+              {levels.map(data => (
                 <Tr key={data.id}>
-                  <Td>{data.title}</Td>
+                  <Td>{data.name}</Td>
                   <Td>{data.company?.name}</Td>
+                  <Td>{data.active}</Td>
                   <Td>
                     <ButtonGroup>
                       <Button
@@ -138,18 +149,18 @@ export const Pages: React.FC = () => {
                         disabled={noAlter}
                         title="Editar Regitro"
                         onClick={() =>
-                          history.push(`/institucional/paginas/form/${data.id}`)
+                          history.push(`/culinaria/niveis/form/${data.id}`)
                         }
                       >
                         <FaPencilAlt />
                       </Button>
                       <Modal
-                        disabled={!hasRole('INSTITUTIONALPAGES_DELETE')}
+                        disabled={!hasRole('RECIPELEVELS_DELETE')}
                         title="Atenção!"
                         button={
                           <Button
                             className="btn btn-outline-danger"
-                            disabled={!hasRole('INSTITUTIONALPAGES_DELETE')}
+                            disabled={!hasRole('RECIPELEVELS_DELETE')}
                             title="Excluir Registro"
                           >
                             <FaTrashAlt />

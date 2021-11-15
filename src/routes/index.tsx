@@ -13,6 +13,8 @@ import { Modules } from '../pages/system/Modules';
 import { Form as ModuleForm } from '../pages/system/Modules/Form';
 import { Pages } from '../pages/institutional/Pages';
 import { Form as PageForm } from '../pages/institutional/Pages/Form';
+import { Levels } from '../pages/recipe/Levels';
+import { Form as LevelForm } from '../pages/recipe/Levels/Form';
 
 import Route from './Route';
 
@@ -22,6 +24,7 @@ const Routes: React.FC = () => (
     <Route path="/dashboard" component={Dashboard} isPrivate />
     <Route path="/401" component={Denied} isPrivate />
 
+    {/* INSTITUCIONAL */}
     <Route
       path="/institucional/paginas"
       exact
@@ -36,6 +39,22 @@ const Routes: React.FC = () => (
       role="INSTITUTIONALPAGES_ALTER"
     />
 
+    {/* CULINÁRIA */}
+    <Route
+      path="/culinaria/niveis"
+      exact
+      component={Levels}
+      isPrivate
+      role="RECIPELEVELS_VIEW"
+    />
+    <Route
+      path="/culinaria/niveis/form/:id?"
+      component={LevelForm}
+      isPrivate
+      role="RECIPELEVELS_ALTER"
+    />
+
+    {/* WEBEDITOR */}
     <Route
       path="/webeditor/usuarios"
       exact
@@ -50,6 +69,7 @@ const Routes: React.FC = () => (
       role="WEBEDITORUSER_ALTER"
     />
 
+    {/* ADMINISTRADOR */}
     <Route
       path="/webeditor/regras"
       exact
