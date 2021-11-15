@@ -20,8 +20,8 @@ export type LevelData = {
 
 export type FilterLevel = BaseFilter & {
   params: {
-    name: string;
-    active: 0 | 1;
+    name?: string;
+    active?: 0 | 1;
   };
 };
 
