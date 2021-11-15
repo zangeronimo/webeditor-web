@@ -28,10 +28,10 @@ export type RecipeData = {
 
 export type FilterRecipe = BaseFilter & {
   params: {
-    slug: string;
-    name: string;
-    categoryId: string;
-    active: 0 | 1;
+    slug?: string;
+    name?: string;
+    categoryId?: string;
+    active?: 0 | 1;
   };
 };
 

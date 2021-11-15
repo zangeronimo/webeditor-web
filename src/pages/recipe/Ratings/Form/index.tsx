@@ -12,25 +12,19 @@ import Select from '../../../../components/Form/Select';
 import { FormGroup } from '../../../../components/Form/FormGroup';
 
 import { Container } from './styles';
+import { getRecipe, Recipe } from '../../../../services/recipe/recipe.service';
 import {
-  Category,
-  getCategory,
-} from '../../../../services/recipe/category.service';
-import {
-  addRecipe,
-  getRecipeById,
-  RecipeData,
-  updateRecipe,
-} from '../../../../services/recipe/recipe.service';
-import { Editor } from '../../../../components/Form/Editor';
+  addRate,
+  getRateById,
+  RateData,
+  updateRate,
+} from '../../../../services/recipe/rate.service';
 import { debounce } from '../../../../utils/debounce';
 
-const HISTORY_BACK = '/culinaria/receitas';
+const HISTORY_BACK = '/culinaria/avaliacoes';
 
 export const Form: React.FC = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [ingredients, setIngredients] = useState('');
-  const [preparation, setPreparation] = useState('');
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
 
   const { addToast } = useToast();
   const history = useHistory();
@@ -46,23 +40,21 @@ export const Form: React.FC = () => {
   } = useForm();
 
   useEffect(() => {
-    getCategory({ params: { perPage: 9999 } }).then(result =>
-      setCategories(result.data.data),
+    getRecipe({ params: { perPage: 9999 } }).then(result =>
+      setRecipes(result.data.data),
     );
   }, []);
 
-  const handleGetRecipe = useCallback(
-    (recipeId: string) => {
-      if (recipeId) {
-        getRecipeById(recipeId).then(result => {
+  const handleGetRate = useCallback(
+    (rateId: string) => {
+      if (rateId) {
+        getRateById(rateId).then(result => {
           const { data } = result;
 
           debounce(() => {
-            setValue('slug', data.slug);
-            setValue('name', data.name);
-            setIngredients(data.ingredients);
-            setPreparation(data.preparation);
-            setValue('categoryId', data.category.id);
+            setValue('rate', data.rate);
+            setValue('comment', data.comment);
+            setValue('recipeId', data.recipe.id);
             setValue('active', data.active);
           }, 1);
         });
@@ -71,28 +63,32 @@ export const Form: React.FC = () => {
     [setValue],
   );
 
-  useEffect(() => handleGetRecipe(id), [handleGetRecipe, id]);
+  useEffect(() => handleGetRate(id), [handleGetRate, id]);
 
-  useEffect(() => setTitle('Receitas / Formulário'), [setTitle]);
+  useEffect(() => setTitle('Avaliações / Formulário'), [setTitle]);
 
   const onSubmit = useCallback(
-    async (values: { name: string; categoryId: string; active: 0 | 1 }) => {
+    async (values: {
+      rate: number;
+      comment: string;
+      recipeId: string;
+      active: 0 | 1;
+    }) => {
       if (id) {
-        const data: RecipeData = {
+        const data: RateData = {
           id,
-          name: values.name,
-          ingredients,
-          preparation,
-          categoryId: values.categoryId,
+          rate: values.rate,
+          comment: values.comment,
+          recipeId: values.recipeId,
           active: values.active,
         };
 
-        updateRecipe(id, data)
+        updateRate(id, data)
           .then(result => {
             addToast({
               title: 'Sucesso',
               type: 'success',
-              description: `Receita ${result.data.name} atualizada.`,
+              description: `Avaliação ${result.data.id} atualizada.`,
             });
             history.push(HISTORY_BACK);
           })
@@ -100,23 +96,22 @@ export const Form: React.FC = () => {
             addToast({
               title: 'Falha',
               type: 'error',
-              description: `Falha ao tentar atualizar a receita.`,
+              description: `Falha ao tentar atualizar a avaliação.`,
             });
           });
       } else {
-        const data: RecipeData = {
-          name: values.name,
-          ingredients,
-          preparation,
-          categoryId: values.categoryId,
+        const data: RateData = {
+          rate: values.rate,
+          comment: values.comment,
+          recipeId: values.recipeId,
         };
 
-        addRecipe(data)
+        addRate(data)
           .then(result => {
             addToast({
               title: 'Sucesso',
               type: 'success',
-              description: `Receita ${result.data.name} adicionada.`,
+              description: `Avaliação ${result.data.id} adicionada.`,
             });
             history.push(HISTORY_BACK);
           })
@@ -124,37 +119,50 @@ export const Form: React.FC = () => {
             addToast({
               title: 'Falha',
               type: 'error',
-              description: `Falha ao tentar adicionar a receita.`,
+              description: `Falha ao tentar adicionar a avaliação.`,
             });
           });
       }
     },
-    [addToast, history, id, ingredients, preparation],
+    [addToast, history, id],
   );
 
   return (
     <Container>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup>
+          <Select
+            width="col-12 col-md-2"
+            label="Nota"
+            name="rate"
+            error={errors.rate?.message}
+            register={register}
+          >
+            <option value={2}>2</option>
+            <option value={4}>4</option>
+            <option value={6}>6</option>
+            <option value={8}>8</option>
+            <option value={10}>10</option>
+          </Select>
           <Input
             width="col-12 col-md-5"
-            label="Nome"
-            name="name"
-            error={errors.name?.message}
+            label="Comentário"
+            name="comment"
+            error={errors.comment?.message}
             register={register}
           />
           <Select
             width="col-12 col-md-5 col-lg-3"
-            label="Categoria"
-            name="categoryId"
-            error={errors.categoryId?.message}
+            label="Receita"
+            name="recipeId"
+            error={errors.recipeId?.message}
             register={register}
           >
             <option value="">Selecione</option>
-            {categories &&
-              categories.map(category => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
+            {recipes &&
+              recipes.map(recipe => (
+                <option key={recipe.id} value={recipe.id}>
+                  {recipe.name}
                 </option>
               ))}
           </Select>
@@ -167,19 +175,14 @@ export const Form: React.FC = () => {
           >
             <option value={1}>Sim</option>
             <option value={0}>Não</option>
+            <option value={2}>Pendente</option>
           </Select>
         </FormGroup>
-
-        <span>Ingredients</span>
-        <Editor data={ingredients} setContent={setIngredients} />
-
-        <span>Modo de preparo</span>
-        <Editor data={preparation} setContent={setPreparation} />
 
         <ButtonGroup between>
           <Button tipo="back" onClick={() => history.push(HISTORY_BACK)} />
           <div className="right">
-            <Button tipo="cancel" onClick={() => handleGetRecipe(id)} />
+            <Button tipo="cancel" onClick={() => handleGetRate(id)} />
             <Button tipo="save" />
           </div>
         </ButtonGroup>

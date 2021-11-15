@@ -19,6 +19,7 @@ import {
   updateCategory,
 } from '../../../../services/recipe/category.service';
 import { getLevel, Level } from '../../../../services/recipe/level.service';
+import { debounce } from '../../../../utils/debounce';
 
 const HISTORY_BACK = '/culinaria/categorias';
 
@@ -49,9 +50,12 @@ export const Form: React.FC = () => {
       if (categoryId) {
         getCategoryById(categoryId).then(result => {
           const { data } = result;
-          setValue('name', data.name);
-          setValue('levelId', data.level.id);
-          setValue('active', data.active);
+
+          debounce(() => {
+            setValue('name', data.name);
+            setValue('levelId', data.level.id);
+            setValue('active', data.active);
+          }, 1);
         });
       }
     },

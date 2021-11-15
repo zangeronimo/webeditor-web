@@ -19,6 +19,8 @@ import { Categories } from '../pages/recipe/Categories';
 import { Form as CategoryForm } from '../pages/recipe/Categories/Form';
 import { Recipes } from '../pages/recipe/Recipes';
 import { Form as RecipeForm } from '../pages/recipe/Recipes/Form';
+import { Ratings } from '../pages/recipe/Ratings';
+import { Form as RateForm } from '../pages/recipe/Ratings/Form';
 
 import Route from './Route';
 
@@ -70,6 +72,20 @@ const Routes: React.FC = () => (
       component={CategoryForm}
       isPrivate
       role="RECIPECATEGORIES_ALTER"
+    />
+
+    <Route
+      path="/culinaria/avaliacoes"
+      exact
+      component={Ratings}
+      isPrivate
+      role="RECIPERATINGS_VIEW"
+    />
+    <Route
+      path="/culinaria/avaliacoes/form/:id?"
+      component={RateForm}
+      isPrivate
+      role="RECIPERATINGS_ALTER"
     />
 
     <Route
