@@ -20,20 +20,23 @@ import { useTitle } from '../../../hooks/title';
 import { useToast } from '../../../hooks/toast';
 import {
   Category,
-  delCategory,
-  FilterCategory,
   getCategory,
 } from '../../../services/recipe/category.service';
-import { getLevel, Level } from '../../../services/recipe/level.service';
+import {
+  delRecipe,
+  FilterRecipe,
+  getRecipe,
+  Recipe,
+} from '../../../services/recipe/recipe.service';
 import { Container } from './styles';
 
-export const Categories: React.FC = () => {
+export const Recipes: React.FC = () => {
   const { setTitle } = useTitle();
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [levels, setLevels] = useState<Level[]>([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const [filter, setFilter] = useState({ params: {} } as FilterCategory);
+  const [filter, setFilter] = useState({ params: {} } as FilterRecipe);
 
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -45,23 +48,23 @@ export const Categories: React.FC = () => {
   const { addToast } = useToast();
   const history = useHistory();
 
-  useEffect(() => setTitle('Categorias'), [setTitle]);
+  useEffect(() => setTitle('Receitas'), [setTitle]);
 
   useEffect(() => {
-    getLevel({ params: { perPage: 9999 } }).then(result =>
-      setLevels(result.data.data),
+    getCategory({ params: { perPage: 9999 } }).then(result =>
+      setCategories(result.data.data),
     );
   }, []);
 
-  const handleGetCategories = useCallback(() => {
+  const handleGetRecipes = useCallback(() => {
     if (order && by) {
       filter.params.order = { field: order, order: by };
     }
     filter.params.page = page;
 
-    getCategory(filter)
+    getRecipe(filter)
       .then(result => {
-        setCategories(result.data.data);
+        setRecipes(result.data.data);
         setTotal(result.data.total);
       })
       .catch(() => {
@@ -72,12 +75,13 @@ export const Categories: React.FC = () => {
         });
       });
   }, [addToast, by, filter, order, page]);
-  useEffect(() => handleGetCategories(), [handleGetCategories]);
+  useEffect(() => handleGetRecipes(), [handleGetRecipes]);
 
   const onFilter = useCallback(data => {
-    const newFilter = { params: {} } as FilterCategory;
+    const newFilter = { params: {} } as FilterRecipe;
+    if (data.slug) newFilter.params.slug = data.slug;
     if (data.name) newFilter.params.name = data.name;
-    if (data.levelId) newFilter.params.levelId = data.levelId;
+    if (data.categoryId) newFilter.params.categoryId = data.categoryId;
     if (data.active) newFilter.params.active = data.active;
 
     setFilter(newFilter);
@@ -85,29 +89,35 @@ export const Categories: React.FC = () => {
 
   const clearFilter = useCallback(() => {
     reset();
-    setFilter({ params: {} } as FilterCategory);
+    setFilter({ params: {} } as FilterRecipe);
   }, [reset]);
 
-  const noAlter = useMemo(() => !hasRole('RECIPECATEGORIES_ALTER'), [hasRole]);
+  const noAlter = useMemo(() => !hasRole('RECIPERECIPES_ALTER'), [hasRole]);
 
   const handleDelete = useCallback(
     (id: string) => {
-      delCategory(id).then(() => {
+      delRecipe(id).then(() => {
         addToast({
           title: 'Registro excluído',
           description: 'Registro excluído com sucesso.',
           type: 'success',
         });
         if (page > 1) setPage(1);
-        else handleGetCategories();
+        else handleGetRecipes();
       });
     },
-    [addToast, page, handleGetCategories],
+    [addToast, page, handleGetRecipes],
   );
 
   return (
     <Container>
       <Filter clearFilters={clearFilter} onSubmit={handleSubmit(onFilter)}>
+        <Input
+          width="col-12 col-sm-5 col-md-3"
+          label="Slug"
+          name="slug"
+          register={register}
+        />
         <Input
           width="col-12 col-sm-5 col-md-3"
           label="Nome"
@@ -121,10 +131,10 @@ export const Categories: React.FC = () => {
           register={register}
         >
           <option value="">Selecione</option>
-          {levels &&
-            levels.map(level => (
-              <option key={level.id} value={level.id}>
-                {level.name}
+          {categories &&
+            categories.map(category => (
+              <option key={category.id} value={category.id}>
+                {category.name}
               </option>
             ))}
         </Select>
@@ -143,7 +153,7 @@ export const Categories: React.FC = () => {
         <Button
           className="btn btn-outline-primary"
           title="Adicionar Registro"
-          onClick={() => history.push('/culinaria/categorias/form')}
+          onClick={() => history.push('/culinaria/receitas/form')}
           disabled={noAlter}
         >
           <FaPlus /> Novo Registro
@@ -153,18 +163,20 @@ export const Categories: React.FC = () => {
       <div className="table-responsive">
         <Table>
           <THead>
+            <Th orderBy="slug">Slug</Th>
             <Th orderBy="name">Nome</Th>
-            <Th>Nível</Th>
+            <Th>Categoria</Th>
             <Th>Empresa</Th>
             <Th orderBy="active">Ativo</Th>
             <Th align="flex-end">Ações</Th>
           </THead>
-          {categories && (
+          {recipes && (
             <TBody>
-              {categories.map(data => (
+              {recipes.map(data => (
                 <Tr key={data.id}>
+                  <Td>{data.slug}</Td>
                   <Td>{data.name}</Td>
-                  <Td>{data.level?.name}</Td>
+                  <Td>{data.category?.name}</Td>
                   <Td>{data.company?.name}</Td>
                   <Td>{data.active}</Td>
                   <Td>
@@ -174,18 +186,18 @@ export const Categories: React.FC = () => {
                         disabled={noAlter}
                         title="Editar Regitro"
                         onClick={() =>
-                          history.push(`/culinaria/categorias/form/${data.id}`)
+                          history.push(`/culinaria/receitas/form/${data.id}`)
                         }
                       >
                         <FaPencilAlt />
                       </Button>
                       <Modal
-                        disabled={!hasRole('RECIPECATEGORIES_DELETE')}
+                        disabled={!hasRole('RECIPERECIPES_DELETE')}
                         title="Atenção!"
                         button={
                           <Button
                             className="btn btn-outline-danger"
-                            disabled={!hasRole('RECIPECATEGORIES_DELETE')}
+                            disabled={!hasRole('RECIPERECIPES_DELETE')}
                             title="Excluir Registro"
                           >
                             <FaTrashAlt />

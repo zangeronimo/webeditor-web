@@ -130,7 +130,7 @@ export const Levels: React.FC = () => {
       <div className="table-responsive">
         <Table>
           <THead>
-            <Th orderBy="title">Título</Th>
+            <Th orderBy="name">Nome</Th>
             <Th>Empresa</Th>
             <Th orderBy="active">Ativo</Th>
             <Th align="flex-end">Ações</Th>

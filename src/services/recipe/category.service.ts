@@ -23,9 +23,9 @@ export type CategoryData = {
 
 export type FilterCategory = BaseFilter & {
   params: {
-    name: string;
-    levelId: string;
-    active: 0 | 1;
+    name?: string;
+    levelId?: string;
+    active?: 0 | 1;
   };
 };
 

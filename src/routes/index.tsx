@@ -17,6 +17,8 @@ import { Levels } from '../pages/recipe/Levels';
 import { Form as LevelForm } from '../pages/recipe/Levels/Form';
 import { Categories } from '../pages/recipe/Categories';
 import { Form as CategoryForm } from '../pages/recipe/Categories/Form';
+import { Recipes } from '../pages/recipe/Recipes';
+import { Form as RecipeForm } from '../pages/recipe/Recipes/Form';
 
 import Route from './Route';
 
@@ -68,6 +70,20 @@ const Routes: React.FC = () => (
       component={CategoryForm}
       isPrivate
       role="RECIPECATEGORIES_ALTER"
+    />
+
+    <Route
+      path="/culinaria/receitas"
+      exact
+      component={Recipes}
+      isPrivate
+      role="RECIPERECIPES_VIEW"
+    />
+    <Route
+      path="/culinaria/receitas/form/:id?"
+      component={RecipeForm}
+      isPrivate
+      role="RECIPERECIPES_ALTER"
     />
 
     {/* WEBEDITOR */}
