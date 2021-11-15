@@ -72,16 +72,10 @@ export const Form: React.FC = () => {
   useEffect(() => setTitle('Receitas / Formulário'), [setTitle]);
 
   const onSubmit = useCallback(
-    async (values: {
-      slug: string;
-      name: string;
-      categoryId: string;
-      active: 0 | 1;
-    }) => {
+    async (values: { name: string; categoryId: string; active: 0 | 1 }) => {
       if (id) {
         const data: RecipeData = {
           id,
-          slug: values.slug,
           name: values.name,
           ingredients,
           preparation,
@@ -107,7 +101,6 @@ export const Form: React.FC = () => {
           });
       } else {
         const data: RecipeData = {
-          slug: values.slug,
           name: values.name,
           ingredients,
           preparation,
@@ -139,13 +132,6 @@ export const Form: React.FC = () => {
     <Container>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup>
-          <Input
-            width="col-12 col-md-5"
-            label="Slug"
-            name="slug"
-            error={errors.slug?.message}
-            register={register}
-          />
           <Input
             width="col-12 col-md-5"
             label="Nome"

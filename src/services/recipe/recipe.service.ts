@@ -19,7 +19,6 @@ export type Recipe = {
 
 export type RecipeData = {
   id?: string;
-  slug: string;
   name: string;
   ingredients: string;
   preparation: string;
