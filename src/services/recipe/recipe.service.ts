@@ -11,6 +11,7 @@ export type Recipe = {
   preparation: string;
   active: 0 | 1;
   category: Category;
+  images: { url: string }[];
   company: {
     id: string;
     name: string;
@@ -19,6 +20,7 @@ export type Recipe = {
 
 export type RecipeData = {
   id?: string;
+  file?: string;
   name: string;
   ingredients: string;
   preparation: string;

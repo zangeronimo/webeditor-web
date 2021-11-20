@@ -10,8 +10,6 @@ import { useToast } from '../../../../hooks/toast';
 
 import Select from '../../../../components/Form/Select';
 import { FormGroup } from '../../../../components/Form/FormGroup';
-
-import { Container } from './styles';
 import {
   Category,
   getCategory,
@@ -24,6 +22,9 @@ import {
 } from '../../../../services/recipe/recipe.service';
 import { Editor } from '../../../../components/Form/Editor';
 import { debounce } from '../../../../utils/debounce';
+import { file2Base64 } from '../../../../utils/file2Base64';
+
+import { Container, Image, Images } from './styles';
 
 const HISTORY_BACK = '/culinaria/receitas';
 
@@ -31,6 +32,7 @@ export const Form: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [ingredients, setIngredients] = useState('');
   const [preparation, setPreparation] = useState('');
+  const [images, setImages] = useState<{ url: string }[]>([]);
 
   const { addToast } = useToast();
   const history = useHistory();
@@ -57,6 +59,8 @@ export const Form: React.FC = () => {
         getRecipeById(recipeId).then(result => {
           const { data } = result;
 
+          setImages(data.images);
+
           debounce(() => {
             setValue('slug', data.slug);
             setValue('name', data.name);
@@ -76,7 +80,12 @@ export const Form: React.FC = () => {
   useEffect(() => setTitle('Receitas / Formulário'), [setTitle]);
 
   const onSubmit = useCallback(
-    async (values: { name: string; categoryId: string; active: 0 | 1 }) => {
+    async (values: {
+      img: string;
+      name: string;
+      categoryId: string;
+      active: 0 | 1;
+    }) => {
       if (id) {
         const data: RecipeData = {
           id,
@@ -86,6 +95,10 @@ export const Form: React.FC = () => {
           categoryId: values.categoryId,
           active: values.active,
         };
+
+        if (values.img.length) {
+          data.file = await file2Base64(values.img[0]);
+        }
 
         updateRecipe(id, data)
           .then(result => {
@@ -110,6 +123,10 @@ export const Form: React.FC = () => {
           preparation,
           categoryId: values.categoryId,
         };
+
+        if (values.img.length) {
+          data.file = await file2Base64(values.img[0]);
+        }
 
         addRecipe(data)
           .then(result => {
@@ -175,6 +192,27 @@ export const Form: React.FC = () => {
 
         <span>Modo de preparo</span>
         <Editor data={preparation} setContent={setPreparation} />
+
+        <Input
+          type="file"
+          width="col-12 col-md-9"
+          label="Imagem"
+          name="img"
+          error={errors.img?.message}
+          register={register}
+        />
+
+        <Images>
+          {images &&
+            images.map(image => (
+              <Image>
+                <img
+                  src={`${process.env.REACT_APP_APIURL}${image.url}`}
+                  alt=""
+                />
+              </Image>
+            ))}
+        </Images>
 
         <ButtonGroup between>
           <Button tipo="back" onClick={() => history.push(HISTORY_BACK)} />
