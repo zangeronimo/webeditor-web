@@ -51,9 +51,9 @@ export const Recipes: React.FC = () => {
   useEffect(() => setTitle('Receitas'), [setTitle]);
 
   useEffect(() => {
-    getCategory({ params: { perPage: 9999 } }).then(result =>
-      setCategories(result.data.data),
-    );
+    getCategory({
+      params: { perPage: 9999, order: { field: 'level', order: 'ASC' } },
+    }).then(result => setCategories(result.data.data));
   }, []);
 
   const handleGetRecipes = useCallback(() => {
@@ -126,15 +126,15 @@ export const Recipes: React.FC = () => {
         />
         <Select
           width="col-12 col-md-5 col-lg-3"
-          label="Nível"
-          name="levelId"
+          label="Categoria"
+          name="categoryId"
           register={register}
         >
           <option value="">Selecione</option>
           {categories &&
             categories.map(category => (
               <option key={category.id} value={category.id}>
-                {category.name}
+                {category.level.name} - {category.name}
               </option>
             ))}
         </Select>

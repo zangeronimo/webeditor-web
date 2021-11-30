@@ -48,9 +48,9 @@ export const Form: React.FC = () => {
   } = useForm();
 
   useEffect(() => {
-    getCategory({ params: { perPage: 9999 } }).then(result =>
-      setCategories(result.data.data),
-    );
+    getCategory({
+      params: { perPage: 9999, order: { field: 'level', order: 'ASC' } },
+    }).then(result => setCategories(result.data.data));
   }, []);
 
   const handleGetRecipe = useCallback(
@@ -122,6 +122,7 @@ export const Form: React.FC = () => {
           ingredients,
           preparation,
           categoryId: values.categoryId,
+          active: values.active,
         };
 
         if (values.img.length) {
@@ -171,7 +172,7 @@ export const Form: React.FC = () => {
             {categories &&
               categories.map(category => (
                 <option key={category.id} value={category.id}>
-                  {category.name}
+                  {category.level.name} - {category.name}
                 </option>
               ))}
           </Select>
