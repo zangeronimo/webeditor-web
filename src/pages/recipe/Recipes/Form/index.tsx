@@ -138,11 +138,15 @@ export const Form: React.FC = () => {
             });
             history.push(HISTORY_BACK);
           })
-          .catch(() => {
+          .catch(err => {
+            const { response } = err.request;
+            const responseBody = JSON.parse(response ?? '{}');
+
             addToast({
               title: 'Falha',
               type: 'error',
-              description: `Falha ao tentar adicionar a receita.`,
+              description:
+                responseBody.message ?? 'Falha ao tentar adicionar a receita.',
             });
           });
       }
