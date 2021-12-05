@@ -20,6 +20,7 @@ import {
   updateRate,
 } from '../../../../services/recipe/rate.service';
 import { debounce } from '../../../../utils/debounce';
+import Textarea from '../../../../components/Form/Textarea';
 
 const HISTORY_BACK = '/culinaria/avaliacoes';
 
@@ -52,6 +53,7 @@ export const Form: React.FC = () => {
           const { data } = result;
 
           debounce(() => {
+            setValue('name', data.name);
             setValue('rate', data.rate);
             setValue('comment', data.comment);
             setValue('recipeId', data.recipe.id);
@@ -69,6 +71,7 @@ export const Form: React.FC = () => {
 
   const onSubmit = useCallback(
     async (values: {
+      name: string;
       rate: number;
       comment: string;
       recipeId: string;
@@ -77,6 +80,7 @@ export const Form: React.FC = () => {
       if (id) {
         const data: RateData = {
           id,
+          name: values.name,
           rate: values.rate,
           comment: values.comment,
           recipeId: values.recipeId,
@@ -101,6 +105,7 @@ export const Form: React.FC = () => {
           });
       } else {
         const data: RateData = {
+          name: values.name,
           rate: values.rate,
           comment: values.comment,
           recipeId: values.recipeId,
@@ -131,8 +136,16 @@ export const Form: React.FC = () => {
     <Container>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup>
+          <Input
+            width="col-12 col-md-4"
+            label="Nome"
+            maxLength={150}
+            name="name"
+            error={errors.name?.message}
+            register={register}
+          />
           <Select
-            width="col-12 col-md-2"
+            width="col-12 col-md-1"
             label="Nota"
             name="rate"
             error={errors.rate?.message}
@@ -144,13 +157,6 @@ export const Form: React.FC = () => {
             <option value={8}>8</option>
             <option value={10}>10</option>
           </Select>
-          <Input
-            width="col-12 col-md-5"
-            label="Comentário"
-            name="comment"
-            error={errors.comment?.message}
-            register={register}
-          />
           <Select
             width="col-12 col-md-5 col-lg-3"
             label="Receita"
@@ -177,6 +183,15 @@ export const Form: React.FC = () => {
             <option value={0}>Não</option>
             <option value={2}>Pendente</option>
           </Select>
+        </FormGroup>
+        <FormGroup>
+          <Textarea
+            width="col-12 col-md-8"
+            label="Comentário"
+            name="comment"
+            error={errors.comment?.message}
+            register={register}
+          />
         </FormGroup>
 
         <ButtonGroup between>

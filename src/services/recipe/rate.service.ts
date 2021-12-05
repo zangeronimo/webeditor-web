@@ -5,6 +5,7 @@ import { Recipe } from './recipe.service';
 
 export type Rate = {
   id: string;
+  name: string;
   rate: number;
   comment: string;
   active: 0 | 1;
@@ -17,6 +18,7 @@ export type Rate = {
 
 export type RateData = {
   id?: string;
+  name: string;
   rate: number;
   comment: string;
   recipeId: string;

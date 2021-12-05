@@ -160,7 +160,8 @@ export const Ratings: React.FC = () => {
       <div className="table-responsive">
         <Table>
           <THead>
-            <Th orderBy="name">Nota</Th>
+            <Th orderBy="name">name</Th>
+            <Th orderBy="rate">Nota</Th>
             <Th>Receita</Th>
             <Th>Empresa</Th>
             <Th orderBy="active">Ativo</Th>
@@ -170,6 +171,7 @@ export const Ratings: React.FC = () => {
             <TBody>
               {ratings.map(data => (
                 <Tr key={data.id}>
+                  <Td>{data.name}</Td>
                   <Td>{data.rate}</Td>
                   <Td>{data.recipe?.name}</Td>
                   <Td>{data.company?.name}</Td>
