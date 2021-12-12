@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 import { FaChevronCircleLeft } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../hooks/auth';
@@ -38,6 +39,34 @@ export const Sidebar: React.FC = () => {
               <li>
                 <Link to="/institucional/paginas">
                   <span data-bs-toggle="offcanvas">Páginas</span>
+                </Link>
+              </li>
+            )}
+          </ul>
+        </div>
+
+        {hasOneRole(['MKTCATEGORIES_VIEW', 'MKTPRODUCTS_VIEW']) && (
+          <h2
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseMARKETINGDIGITAL"
+            aria-controls="collapseMARKETINGDIGITAL"
+          >
+            Marketing Digital
+          </h2>
+        )}
+        <div className="collapse" id="collapseMARKETINGDIGITAL">
+          <ul>
+            {hasRole('MKTCATEGORIES_VIEW') && (
+              <li>
+                <Link to="/marketing/categorias">
+                  <span data-bs-toggle="offcanvas">Categorias</span>
+                </Link>
+              </li>
+            )}
+            {hasRole('MKTPRODUCTS_VIEW') && (
+              <li>
+                <Link to="/marketing/produtos">
+                  <span data-bs-toggle="offcanvas">Produtos</span>
                 </Link>
               </li>
             )}
