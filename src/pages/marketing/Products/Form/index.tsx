@@ -61,6 +61,7 @@ export const Form: React.FC = () => {
           debounce(() => {
             setValue('slug', data.slug);
             setValue('title', data.title);
+            setValue('url', data.url);
             setBanner(data.banner);
             setContent(data.content);
             setValue('categoryId', data.category.id);
@@ -80,6 +81,7 @@ export const Form: React.FC = () => {
     async (values: {
       img: string;
       title: string;
+      url: string;
       categoryId: string;
       active: 0 | 1;
     }) => {
@@ -87,6 +89,7 @@ export const Form: React.FC = () => {
         const data: ProductData = {
           id,
           title: values.title,
+          url: values.url,
           content,
           categoryId: values.categoryId,
           active: values.active,
@@ -115,6 +118,7 @@ export const Form: React.FC = () => {
       } else {
         const data: ProductData = {
           title: values.title,
+          url: values.url,
           content,
           categoryId: values.categoryId,
           active: values.active,
@@ -187,17 +191,28 @@ export const Form: React.FC = () => {
           </Select>
         </FormGroup>
 
-        <span>Conteúdo</span>
-        <Editor data={content} setContent={setContent} />
+        <FormGroup>
+          <span>Conteúdo</span>
+          <Editor data={content} setContent={setContent} />
+        </FormGroup>
 
-        <Input
-          type="file"
-          width="col-12 col-md-9"
-          label="Imagem"
-          name="img"
-          error={errors.img?.message}
-          register={register}
-        />
+        <FormGroup>
+          <Input
+            type="file"
+            width="col-12 col-md-5"
+            label="Imagem"
+            name="img"
+            error={errors.img?.message}
+            register={register}
+          />
+          <Input
+            width="col-12 col-md-5"
+            label="URL"
+            name="url"
+            error={errors.url?.message}
+            register={register}
+          />
+        </FormGroup>
 
         <Images>
           <Image>

@@ -8,6 +8,7 @@ export type Product = {
   slug: string;
   banner: string;
   title: string;
+  url: string;
   content: string;
   active: 0 | 1;
   category: Category;
@@ -21,6 +22,7 @@ export type ProductData = {
   id?: string;
   file?: string;
   title: string;
+  url: string;
   content: string;
   categoryId: string;
   active?: 0 | 1;
